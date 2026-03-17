@@ -1,0 +1,85 @@
+/* ==========================================================================
+   RESET & BASE
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* Police système propre et moderne (type Apple/San Francisco) */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: #ffffff; /* Fond blanc pour le reste du site */
+    color: #333333;
+}
+
+/* ==========================================================================
+   HEADER & NAVIGATION
+   ========================================================================== */
+
+.site-header {
+    /* Le fameux dégradé : gris très clair en haut, transparent vers le bas */
+    background: linear-gradient(180deg, #f0f0f0 0%, rgba(240, 240, 240, 0) 100%);
+    /* Padding : Haut(30px) Droite(60px) Bas(100px) Gauche(60px) 
+       Le bas à 100px permet au dégradé de s'étirer joliment */
+    padding: 30px 60px 100px 60px;
+    width: 100%;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between; /* Pousse le logo à gauche et le menu à droite */
+    align-items: center;            /* Aligne tout sur la même ligne horizontale */
+    max-width: 1400px;              /* Évite que le menu soit trop étiré sur les grands écrans */
+    margin: 0 auto;                 /* Centre le conteneur */
+}
+
+/* --- Le Logo --- */
+.logo {
+    text-decoration: none;
+    color: #000000;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+/* --- Le conteneur Menu + Bouton --- */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 40px; /* Espace entre les liens de navigation et le bouton noir */
+}
+
+/* --- Les liens de navigation --- */
+.main-nav {
+    display: flex;
+    gap: 30px; /* Espace entre chaque lien (Accueil, Offres, Entreprise) */
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: #000000;
+    font-size: 1rem;
+    font-weight: 400;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.main-nav a:hover {
+    opacity: 0.6; /* Effet de survol subtil */
+}
+
+/* --- Le bouton "Se connecter" --- */
+.btn-connect {
+    background-color: #000000;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 6px; /* Coins légèrement arrondis comme sur ton image */
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.btn-connect:hover {
+    background-color: #333333; /* Devient gris foncé au survol */
+}
