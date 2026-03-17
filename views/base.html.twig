@@ -1,4 +1,3 @@
-{# views/base.html.twig #}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -8,31 +7,12 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+    {% include 'partials/navbar.html.twig' %}
 
-    {# Ta fameuse Navbar avec le dégradé #}
-    <header class="site-header">
-        <div class="header-content">
-            <a href="/" class="logo">Web4all</a>
-            
-            <div class="header-right">
-                <nav class="main-nav">
-                    <a href="/">Accueil</a>
-                    <a href="/offres">Offres</a>
-                    <a href="/entreprise">Entreprise</a>
-                </nav>
-                <a href="/connexion" class="btn-connect">Se connecter</a>
-            </div>
-        </div>
-    </header>
-
-    {# C'est ICI que le contenu de tes autres pages va s'injecter #}
     <main>
-        {% block content %}{% endblock %}
+        {% block body %}{% endblock %}
     </main>
 
-    <footer>
-        <p style="text-align: center; padding: 20px; color: #888;">&copy; 2026 Web4all</p>
-    </footer>
-
+    {% include 'partials/footer.html.twig' %}
 </body>
 </html>

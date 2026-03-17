@@ -1,0 +1,21 @@
+<header class="site-header">
+    <nav class="navbar">
+        <div class="navbar__logo">
+            <a href="/">Web4all</a>
+        </div>
+
+        <ul class="navbar__links">
+            <li><a href="/">Accueil</a></li>
+            <li><a href="/offers">Offres</a></li>
+            <li><a href="/companies">Entreprise</a></li>
+
+            {% if user %}
+                <li><a href="/wishlist">Wish-list</a></li>
+                <li><a href="/dashboard">Tableau de bord</a></li>
+                <li><a href="/logout" class="btn-login">Se déconnecter</a></li>
+            {% else %}
+                <li><a href="/login" class="btn-login">Se connecter</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</header>
