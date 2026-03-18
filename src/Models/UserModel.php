@@ -48,4 +48,92 @@ class UserModel
 
         return null;
     }
+
+    public function findById(int $userId): array|false
+    {
+        $stmt = $this->db->prepare('SELECT * FROM user WHERE user_id = :user_id LIMIT 1');
+        $stmt->execute([
+            'user_id' => $userId
+        ]);
+
+        return $stmt->fetch();
+    }
+
+    public function emailExistsForAnotherUser(string $email, int $userId): bool
+    {
+        $stmt = $this->db->prepare('
+            SELECT user_id
+            FROM user
+            WHERE email = :email AND user_id != :user_id
+            LIMIT 1
+        ');
+
+        $stmt->execute([
+            'email' => $email,
+            'user_id' => $userId
+        ]);
+
+        return (bool) $stmt->fetch();
+    }
+
+    public function updateProfile(
+        int $userId,
+        string $lastName,
+        string $firstName,
+        string $email,
+        ?string $phoneNumber,
+        ?string $password = null
+    ): bool {
+        if ($password !== null && $password !== '') {
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+            $stmt = $this->db->prepare('
+                UPDATE user
+                SET last_name = :last_name,
+                    first_name = :first_name,
+                    email = :email,
+                    phone_number = :phone_number,
+                    password = :password
+                WHERE user_id = :user_id
+            ');
+
+            return $stmt->execute([
+                'last_name' => $lastName,
+                'first_name' => $firstName,
+                'email' => $email,
+                'phone_number' => $phoneNumber,
+                'password' => $hashedPassword,
+                'user_id' => $userId
+            ]);
+        }
+
+        $stmt = $this->db->prepare('
+            UPDATE user
+            SET last_name = :last_name,
+                first_name = :first_name,
+                email = :email,
+                phone_number = :phone_number
+            WHERE user_id = :user_id
+        ');
+
+        return $stmt->execute([
+            'last_name' => $lastName,
+            'first_name' => $firstName,
+            'email' => $email,
+            'phone_number' => $phoneNumber,
+            'user_id' => $userId
+        ]);
+    }
+
+    public function deleteAccount(int $userId): bool {
+        $stmt = $this->db->prepare('
+            UPDATE user
+            SET is_valid = 0
+            WHERE user_id = :user_id
+        ');
+
+        return $stmt->execute([
+            'user_id' => $userId
+        ]);
+    }
 }

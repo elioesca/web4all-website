@@ -24,12 +24,7 @@ class DashboardController extends Controller
                     'title' => 'Wish-list',
                     'url' => '/wishlist',
                     'color' => 'yellow'
-                ],
-                [
-                    'title' => 'Modifier mes informations',
-                    'url' => '/profile',
-                    'color' => 'blue'
-                ],
+                ]
             ];
         }
 
@@ -49,12 +44,7 @@ class DashboardController extends Controller
                     'title' => 'Gestion des étudiants',
                     'url' => '/students',
                     'color' => 'blue'
-                ],
-                [
-                    'title' => 'Modifier mes informations',
-                    'url' => '/profile',
-                    'color' => 'purple'
-                ],
+                ]
             ];
         }
 

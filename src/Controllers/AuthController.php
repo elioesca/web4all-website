@@ -85,7 +85,7 @@ class AuthController extends Controller
     public function forgotPassword(): void
     {
         $this->render('forgot-password.html.twig', [
-            'message' => 'Nous vous avons envoyé un mail pour pouvoir modifier le mot de passe.'
+            'message' => 'Si un compte est associé à cette adresse, vous recevrez un e-mail contenant les instructions pour réinitialiser votre mot de passe.'
         ]);
     }
 }
