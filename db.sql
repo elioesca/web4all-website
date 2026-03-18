@@ -11,9 +11,8 @@ CREATE TABLE user (
     password VARCHAR(255) NOT NULL,
     phone_number VARCHAR(50),
     is_valid BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
 
 CREATE TABLE administrator (
@@ -22,7 +21,7 @@ CREATE TABLE administrator (
         FOREIGN KEY (user_id) REFERENCES user(user_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
-) ENGINE=InnoDB;
+);
 
 CREATE TABLE pilot (
     user_id INT PRIMARY KEY,
@@ -30,18 +29,18 @@ CREATE TABLE pilot (
         FOREIGN KEY (user_id) REFERENCES user(user_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
-) ENGINE=InnoDB;
+);
 
 
 CREATE TABLE promotion (
     promotion_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE
-) ENGINE=InnoDB;
+);
 
 CREATE TABLE search_status (
     search_status_id INT AUTO_INCREMENT PRIMARY KEY,
     status VARCHAR(50) NOT NULL UNIQUE
-) ENGINE=InnoDB;
+);
 
 CREATE TABLE student (
     user_id INT PRIMARY KEY,
@@ -59,7 +58,7 @@ CREATE TABLE student (
         FOREIGN KEY (promotion_id) REFERENCES promotion(promotion_id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE
-) ENGINE=InnoDB;
+);
 
 CREATE TABLE pilot_promotion (
     pilot_user_id INT NOT NULL,
@@ -73,7 +72,7 @@ CREATE TABLE pilot_promotion (
         FOREIGN KEY (promotion_id) REFERENCES promotion(promotion_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
-) ENGINE=InnoDB;
+);
 
 
 CREATE TABLE company (
@@ -84,15 +83,14 @@ CREATE TABLE company (
     email VARCHAR(150),
     phone_number VARCHAR(50),
     is_valid BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
 
 CREATE TABLE offer_type (
     offer_type_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE
-) ENGINE=InnoDB;
+);
 
 CREATE TABLE offer (
     offer_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -118,13 +116,13 @@ CREATE TABLE offer (
         FOREIGN KEY (offer_type_id) REFERENCES offer_type(offer_type_id)
         ON DELETE RESTRICT
         ON UPDATE CASCADE
-) ENGINE=InnoDB;
+);
 
 
 CREATE TABLE skill (
     skill_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE
-) ENGINE=InnoDB;
+);
 
 CREATE TABLE offer_skill (
     offer_id INT NOT NULL,
@@ -138,13 +136,13 @@ CREATE TABLE offer_skill (
         FOREIGN KEY (skill_id) REFERENCES skill(skill_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
-) ENGINE=InnoDB;
+);
 
 
 CREATE TABLE application_status (
     application_status_id INT AUTO_INCREMENT PRIMARY KEY,
     status VARCHAR(50) NOT NULL UNIQUE
-) ENGINE=InnoDB;
+);
 
 CREATE TABLE application (
     application_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -167,7 +165,7 @@ CREATE TABLE application (
         FOREIGN KEY (offer_id) REFERENCES offer(offer_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
-) ENGINE=InnoDB;
+);
 
 
 CREATE TABLE wishlist (
@@ -183,7 +181,7 @@ CREATE TABLE wishlist (
         FOREIGN KEY (offer_id) REFERENCES offer(offer_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
-) ENGINE=InnoDB;
+);
 
 CREATE TABLE company_review (
     company_review_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -202,7 +200,7 @@ CREATE TABLE company_review (
         FOREIGN KEY (user_id) REFERENCES user(user_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
-) ENGINE=InnoDB;
+);
 
 
 CREATE INDEX idx_user_email ON user(email);
