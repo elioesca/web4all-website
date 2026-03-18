@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord - Web4all{% endblock %}
+
+{% block body %}
+<section class="dashboard-hero">
+    <h1>Bonjour {{ user.first_name }},</h1>
+
+    <div class="dashboard-separator"></div>
+
+    <div class="dashboard-cards">
+        {% for card in cards %}
+            <a href="{{ card.url }}" class="dashboard-card dashboard-card--{{ card.color }}">
+                <span>{{ card.title }}</span>
+            </a>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

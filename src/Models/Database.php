@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core;
+namespace App\Models;
 
 use PDO;
 use PDOException;
@@ -14,23 +14,19 @@ class Database
         if (self::$connection === null) {
             $config = require __DIR__ . '/../../config/database.php';
 
-            $dsn = sprintf(
-                'mysql:host=%s;port=%s;dbname=%s;charset=%s',
-                $config['host'],
-                $config['port'],
-                $config['dbname'],
-                $config['charset']
-            );
+            $uri = 'mysql:host=' . $config['host']
+                . ';port=' . $config['port']
+                . ';dbname=' . $config['dbname']
+                . ';charset=' . $config['charset'];
 
             try {
                 self::$connection = new PDO(
-                    $dsn,
+                    $uri,
                     $config['username'],
                     $config['password'],
                     [
                         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                        PDO::ATTR_EMULATE_PREPARES => false,
                     ]
                 );
             } catch (PDOException $e) {
