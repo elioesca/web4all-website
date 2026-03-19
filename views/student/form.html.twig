@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle }} - Web4all{% endblock %}
+
+{% block body %}
+<section class="profile-page">
+    <h1 class="profile-title">{{ pageTitle }}</h1>
+    <div class="profile-separator"></div>
+
+    <div class="profile-card">
+        {% if error is defined %}
+            <p class="profile-message profile-message--error">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST" action="{{ formAction }}" class="profile-form">
+            {% if student and student.user_id is defined %}
+                <input type="hidden" name="user_id" value="{{ student.user_id }}">
+            {% endif %}
+
+            <div class="profile-field">
+                <label for="last_name">NOM</label>
+                <input
+                    type="text"
+                    id="last_name"
+                    name="last_name"
+                    placeholder="Nom"
+                    value="{{ student.last_name|default('') }}"
+                    required
+                >
+            </div>
+
+            <div class="profile-field">
+                <label for="first_name">PRENOM</label>
+                <input
+                    type="text"
+                    id="first_name"
+                    name="first_name"
+                    placeholder="Prénom"
+                    value="{{ student.first_name|default('') }}"
+                    required
+                >
+            </div>
+
+            <div class="profile-field">
+                <label for="email">EMAIL</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="prenom@example.com"
+                    value="{{ student.email|default('') }}"
+                    required
+                >
+            </div>
+
+            <div class="profile-field">
+                <label for="phone_number">TELEPHONE</label>
+                <input
+                    type="text"
+                    id="phone_number"
+                    name="phone_number"
+                    placeholder="Numéro de téléphone"
+                    value="{{ student.phone_number|default('') }}"
+                >
+            </div>
+
+            <div class="profile-field">
+                <label for="password">MOT DE PASSE</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Mot de passe"
+                >
+            </div>
+
+            <div class="profile-field">
+                <label for="promotion_id">PROMOTION</label>
+                <select id="promotion_id" name="promotion_id" required>
+                    <option value="">Promotion</option>
+                    {% for promotion in promotions %}
+                        <option
+                            value="{{ promotion.promotion_id }}"
+                            {% if student and student.promotion_id == promotion.promotion_id %}selected{% endif %}
+                        >
+                            {{ promotion.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="profile-field">
+                <label for="search_status_id">STATUT DE RECHERCHE</label>
+                <select id="search_status_id" name="search_status_id" required>
+                    <option value="">Statut</option>
+                    {% for status in searchStatuses %}
+                        <option
+                            value="{{ status.search_status_id }}"
+                            {% if student and student.search_status_id == status.search_status_id %}selected{% endif %}
+                        >
+                            {{ status.status }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="profile-actions">
+                <button type="submit" class="profile-btn profile-btn--edit">
+                    {{ submitLabel }}
+                </button>
+            </div>
+        </form>
+
+        {% if showDeactivate and student and student.user_id is defined %}
+            <form method="POST" action="/students/deactivate" class="profile-delete-form">
+                <input type="hidden" name="user_id" value="{{ student.user_id }}">
+
+                <div class="profile-actions">
+                    <button type="submit" class="profile-btn profile-btn--delete">
+                        DESACTIVER
+                    </button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
