@@ -408,4 +408,24 @@ class StudentController extends Controller
             'studentId' => $studentUserId
         ]);
     }
+
+    public function reactivate(): void
+    {
+        $this->requireLogin();
+
+        if (!in_array($_SESSION['user']['role'], ['admin', 'pilot'])) {
+            $this->redirect('/dashboard');
+        }
+
+        $userId = (int) ($_POST['user_id'] ?? 0);
+
+        if ($userId <= 0) {
+            $this->redirect('/students');
+        }
+
+        $studentModel = new StudentModel();
+        $studentModel->reactivateStudent($userId);
+
+        $this->redirect('/students/edit?id=' . $userId);
+    }
 }

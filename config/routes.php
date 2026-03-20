@@ -6,6 +6,7 @@ use App\Controllers\HomeController;
 use App\Controllers\ProfileController;
 use App\Controllers\StudentController;
 use App\Controllers\PilotController;
+use App\Controllers\CompanyController;
 
 return [
     'GET' => [
@@ -24,6 +25,11 @@ return [
         '/pilots' => [PilotController::class, 'index'],
         '/pilots/create' => [PilotController::class, 'create'],
         '/pilots/edit' => [PilotController::class, 'edit'],
+
+        '/companies' => [CompanyController::class, 'index'],
+        '/companies/show' => [CompanyController::class, 'show'],
+        '/companies/create' => [CompanyController::class, 'create'],
+        '/companies/edit' => [CompanyController::class, 'edit'],
     ],
 
     'POST' => [
@@ -35,9 +41,17 @@ return [
         '/students/create' => [StudentController::class, 'store'],
         '/students/edit' => [StudentController::class, 'update'],
         '/students/deactivate' => [StudentController::class, 'deactivate'],
+        '/students/reactivate' => [StudentController::class, 'reactivate'],
+
 
         '/pilots/create' => [PilotController::class, 'store'], 
         '/pilots/edit' => [PilotController::class, 'update'],
         '/pilots/deactivate' => [PilotController::class, 'deactivate'],
+        '/pilots/reactivate' => [PilotController::class, 'reactivate'],
+
+        '/companies/create' => [CompanyController::class, 'store'],
+        '/companies/edit' => [CompanyController::class, 'update'],
+        '/companies/deactivate' => [CompanyController::class, 'deactivate'],
+        '/companies/review' => [CompanyController::class, 'review'],
     ],
 ];

@@ -273,4 +273,17 @@ class PilotModel
 
         return array_map(fn($row) => (int) $row['promotion_id'], $rows);
     }
+
+    public function reactivatePilot(int $userId): bool
+    {
+        $stmt = $this->db->prepare("
+            UPDATE user
+            SET is_valid = 1
+            WHERE user_id = :user_id
+        ");
+
+        return $stmt->execute([
+            'user_id' => $userId
+        ]);
+    }
 }

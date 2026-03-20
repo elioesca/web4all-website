@@ -439,6 +439,345 @@ main {
 }
 
 /* =========================
+   COMPANY
+========================= */
+.company-page {
+    padding: 60px 40px 100px;
+}
+
+.company-page-title {
+    text-align: center;
+    font-size: 56px;
+    font-weight: 800;
+    color: #000;
+    margin-bottom: 18px;
+}
+
+.company-page-separator {
+    width: 420px;
+    max-width: 90%;
+    height: 18px;
+    margin: 0 auto 45px;
+    border-radius: 20px;
+    background: #ece7e7;
+}
+
+.company-filters {
+    max-width: 1280px;
+    margin: 0 auto 28px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr auto;
+    gap: 24px;
+    align-items: end;
+}
+
+.company-filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.company-filter-field label {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.company-filter-field input,
+.company-filter-field select,
+.company-filter-field textarea {
+    padding: 14px 18px;
+    border: none;
+    border-radius: 12px;
+    background: #e7e7e7;
+    font-size: 16px;
+}
+
+.company-filter-btn {
+    min-width: 140px;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 12px;
+    background: #e5b8a6;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.company-top-actions,
+.company-detail-top-actions {
+    max-width: 1280px;
+    margin: 0 auto 24px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.company-grid {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+}
+
+.company-card {
+    padding: 24px 20px 18px;
+    border-radius: 20px;
+    background: #f7f7f7;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.company-card h2 {
+    margin-bottom: 14px;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.company-card p {
+    min-height: 88px;
+    color: #7c7c7c;
+    font-size: 15px;
+    line-height: 1.45;
+    font-weight: 700;
+}
+
+.company-card-meta {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: #666;
+    font-weight: 700;
+}
+
+.company-card-actions {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.company-card-btn,
+.company-manage-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 130px;
+    padding: 11px 16px;
+    border: none;
+    border-radius: 999px;
+    background: #d8ecf4;
+    color: #111;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.company-manage-btn--create {
+    background: #000;
+    color: #fff;
+}
+
+.company-manage-btn--edit {
+    background: #d8ecf4;
+}
+
+.company-manage-btn--delete {
+    background: #ef5a5a;
+    color: #111;
+}
+
+.company-manage-btn--review {
+    background: #e5b8a6;
+}
+
+.company-empty {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.company-detail-page {
+    padding: 50px 40px 90px;
+}
+
+/* ← MODIFIÉ : conteneur qui aligne tout ensemble */
+.company-detail-header {
+    max-width: 1280px;
+    margin: 0 auto 30px;
+}
+
+/* ← MODIFIÉ : plus de max-width/margin auto, géré par le parent */
+.company-detail-small-title {
+    margin: 0 0 8px;
+    color: #9a9a9a;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+/* ← MODIFIÉ : plus de max-width/margin auto, géré par le parent */
+.company-detail-title {
+    margin: 0 0 14px;
+    font-size: 64px;
+    font-weight: 800;
+    color: #000;
+}
+
+/* ← MODIFIÉ : aligné à gauche dans le conteneur parent */
+.company-detail-separator {
+    width: 400px;
+    max-width: 90%;
+    height: 18px;
+    margin: 0;
+    border-radius: 20px;
+    background: #ece7e7;
+}
+
+.company-detail-grid {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 60px;
+}
+
+.company-detail-left h2,
+.company-detail-right h2,
+.company-review-form-block h2 {
+    margin-bottom: 24px;
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.company-detail-info-card {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 28px;
+    border-radius: 22px;
+    background: #f7f7f7;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+.company-detail-info-card p {
+    font-size: 18px;
+    line-height: 1.5;
+    font-weight: 700;
+}
+
+.company-reviews {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 36px;
+}
+
+.company-review-card {
+    padding: 18px 20px;
+    border-radius: 18px;
+    background: #f7f7f7;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+}
+
+.company-review-author {
+    margin-bottom: 8px;
+    font-weight: 800;
+}
+
+.company-offers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.company-offer-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    border-radius: 18px;
+    background: #f7f7f7;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.company-offer-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 130px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: #d8ecf4;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.company-review-form-block {
+    max-width: 1280px;
+    margin: 42px auto 0;
+    padding: 28px;
+    border-radius: 22px;
+    background: #f7f7f7;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+.company-review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.profile-field textarea {
+    width: 100%;
+    padding: 18px;
+    border: none;
+    border-radius: 18px;
+    background: #efebeb;
+    font-size: 16px;
+    outline: none;
+    resize: vertical;
+}
+
+@media (max-width: 1100px) {
+    .company-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .company-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .company-filters {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 800px) {
+    .company-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .company-filters {
+        grid-template-columns: 1fr;
+    }
+
+    .company-detail-title {
+        font-size: 40px;
+    }
+
+    .company-offer-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* =========================
    PAGINATION
 ========================= */
 .pagination {
@@ -687,6 +1026,11 @@ main {
 
 .profile-message--success {
     color: #2e7d32;
+}
+
+.profile-btn--reactivate {
+    background: #8fd19e;
+    color: #111;
 }
 
 @media (max-width: 900px) {

@@ -112,16 +112,30 @@
         </form>
 
         {% if showDeactivate and student and student.user_id is defined %}
-            <form method="POST" action="/students/deactivate" class="profile-delete-form">
-                <input type="hidden" name="user_id" value="{{ student.user_id }}">
+            {% if student.is_valid %}
+                <form method="POST" action="/students/deactivate" class="profile-delete-form">
+                    <input type="hidden" name="user_id" value="{{ student.user_id }}">
 
-                <div class="profile-actions">
-                    <button type="submit" class="profile-btn profile-btn--delete">
-                        DESACTIVER
-                    </button>
-                </div>
-            </form>
+                    <div class="profile-actions">
+                        <button type="submit" class="profile-btn profile-btn--delete">
+                            DESACTIVER
+                        </button>
+                    </div>
+                </form>
+            {% else %}
+                <form method="POST" action="/students/reactivate" class="profile-delete-form">
+                    <input type="hidden" name="user_id" value="{{ student.user_id }}">
+
+                    <div class="profile-actions">
+                        <button type="submit" class="profile-btn profile-btn--reactivate">
+                            REACTIVER
+                        </button>
+                    </div>
+                </form>
+            {% endif %}
         {% endif %}
+
+        
     </div>
 </section>
 {% endblock %}

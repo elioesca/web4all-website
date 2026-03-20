@@ -326,4 +326,24 @@ class PilotController extends Controller
 
         $this->redirect('/pilots');
     }
+
+    public function reactivate(): void
+    {
+        $this->requireLogin();
+
+        if ($_SESSION['user']['role'] !== 'admin') {
+            $this->redirect('/dashboard');
+        }
+
+        $userId = (int) ($_POST['user_id'] ?? 0);
+
+        if ($userId <= 0) {
+            $this->redirect('/pilots');
+        }
+
+        $pilotModel = new PilotModel();
+        $pilotModel->reactivatePilot($userId);
+
+        $this->redirect('/pilots/edit?id=' . $userId);
+    }
 }

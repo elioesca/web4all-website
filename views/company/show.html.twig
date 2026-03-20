@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ company.name }} - Web4all{% endblock %}
+
+{% block body %}
+<section class="company-detail-page">
+    <div class="company-detail-header">
+        <p class="company-detail-small-title">Fiche de l'entreprise</p>
+        <h1 class="company-detail-title">{{ company.name }}</h1>
+        <div class="company-detail-separator"></div>
+    </div>
+
+    {% if user and user.role in ['admin', 'pilot'] %}
+        <div class="company-detail-top-actions">
+            <a href="/companies/edit?id={{ company.company_id }}" class="company-manage-btn company-manage-btn--edit">
+                Modifier
+            </a>
+
+            <form method="POST" action="/companies/deactivate">
+                <input type="hidden" name="company_id" value="{{ company.company_id }}">
+                <button type="submit" class="company-manage-btn company-manage-btn--delete">
+                    Désactiver
+                </button>
+            </form>
+        </div>
+    {% endif %}
+
+    <div class="company-detail-grid">
+        <div class="company-detail-left">
+            <h2>Informations générales</h2>
+
+            <div class="company-detail-info-card">
+                <p><strong>Description :</strong> {{ company.description }}</p>
+                <p><strong>Secteur :</strong> {{ company.activity_sector }}</p>
+                <p><strong>Email de contact :</strong> {{ company.email }}</p>
+                <p><strong>Téléphone :</strong> {{ company.phone_number }}</p>
+                <p><strong>Moyenne d’évaluation :</strong> {{ company.average_rating|number_format(1, ',', ' ') }}/5</p>
+                <p><strong>Nombre de stagiaires ayant postulé :</strong> {{ company.application_count }}</p>
+            </div>
+        </div>
+
+        <div class="company-detail-right">
+            <h2>Appréciations</h2>
+
+            <div class="company-reviews">
+                {% for review in reviews %}
+                    <div class="company-review-card">
+                        <p class="company-review-author">{{ review.first_name }} {{ review.last_name }} — {{ review.rating }}/5</p>
+                        <p>{{ review.review }}</p>
+                    </div>
+                {% else %}
+                    <p>Aucune appréciation pour le moment.</p>
+                {% endfor %}
+            </div>
+
+            <h2>Offres liées</h2>
+
+            <div class="company-offers-list">
+                {% for offer in offers %}
+                    <div class="company-offer-item">
+                        <span>{{ offer.title|upper }}</span>
+                        <span class="company-offer-badge">{{ offer.duration }} semaines</span>
+                    </div>
+                {% else %}
+                    <p>Aucune offre liée.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {% if user and user.role in ['admin', 'pilot'] %}
+        <div class="company-review-form-block">
+            <h2>Évaluer cette entreprise</h2>
+
+            <form method="POST" action="/companies/review" class="company-review-form">
+                <input type="hidden" name="company_id" value="{{ company.company_id }}">
+
+                <div class="company-filter-field">
+                    <label for="rating">Note</label>
+                    <select name="rating" id="rating" required>
+                        <option value="">Choisir</option>
+                        {% for i in 1..5 %}
+                            <option value="{{ i }}" {% if userReview and userReview.rating == i %}selected{% endif %}>
+                                {{ i }}/5
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="company-filter-field">
+                    <label for="review">Commentaire</label>
+                    <textarea name="review" id="review" rows="5" required>{{ userReview.review|default('') }}</textarea>
+                </div>
+
+                <button type="submit" class="company-manage-btn company-manage-btn--review">
+                    Enregistrer l’évaluation
+                </button>
+            </form>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

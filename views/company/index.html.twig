@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle }} - Web4all{% endblock %}
+
+{% block body %}
+<section class="company-page">
+    <h1 class="company-page-title">{{ pageTitle }}</h1>
+    <div class="company-page-separator"></div>
+
+    <form method="GET" action="/companies" class="company-filters">
+        <div class="company-filter-field">
+            <label for="name">Nom</label>
+            <input type="text" id="name" name="name" value="{{ name }}" placeholder="Nom de l’entreprise...">
+        </div>
+
+        <div class="company-filter-field">
+            <label for="sector">Secteur</label>
+            <select id="sector" name="sector">
+                <option value="">Tous</option>
+                {% for item in sectors %}
+                    <option value="{{ item.activity_sector }}" {% if sector == item.activity_sector %}selected{% endif %}>
+                        {{ item.activity_sector }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="company-filter-field">
+            <label for="rating">Évaluation</label>
+            <select id="rating" name="rating">
+                <option value="">Toutes</option>
+                <option value="1" {% if rating == '1' %}selected{% endif %}>1+</option>
+                <option value="2" {% if rating == '2' %}selected{% endif %}>2+</option>
+                <option value="3" {% if rating == '3' %}selected{% endif %}>3+</option>
+                <option value="4" {% if rating == '4' %}selected{% endif %}>4+</option>
+                <option value="5" {% if rating == '5' %}selected{% endif %}>5</option>
+            </select>
+        </div>
+
+        <div class="company-filter-actions">
+            <button type="submit" class="company-filter-btn">Filtrer</button>
+        </div>
+    </form>
+
+    {% if user and user.role in ['admin', 'pilot'] %}
+        <div class="company-top-actions">
+            <a href="/companies/create" class="company-manage-btn company-manage-btn--create">
+                Créer une entreprise
+            </a>
+        </div>
+    {% endif %}
+
+    <div class="company-grid">
+        {% for company in companies %}
+            <article class="company-card">
+                <h2>{{ company.name|upper }}</h2>
+                <p>{{ company.description }}</p>
+
+                <div class="company-card-meta">
+                    <span>{{ company.activity_sector }}</span>
+                    {% if company.average_rating is not null and company.average_rating > 0 %}
+                        <span>Note : {{ company.average_rating|number_format(1, ',', ' ') }}/5</span>
+                    {% else %}
+                        <span>Aucun avis</span>
+                    {% endif %}
+                </div>
+
+                <div class="company-card-actions">
+                    <a href="/offers?company={{ company.company_id }}" class="company-card-btn">
+                        Voir les offres
+                    </a>
+
+                    <a href="/companies/show?id={{ company.company_id }}" class="company-card-btn">
+                        Voir la fiche
+                    </a>
+                </div>
+            </article>
+        {% else %}
+            <p class="company-empty">Aucune entreprise trouvée.</p>
+        {% endfor %}
+    </div>
+
+    {% include 'partials/pagination.html.twig' with {
+        currentPage: currentPage,
+        totalPages: totalPages,
+        basePath: basePath,
+        search: null,
+        extraQuery: 'name=' ~ name|url_encode ~ '&sector=' ~ sector|url_encode ~ '&rating=' ~ rating|url_encode
+    } %}
+</section>
+{% endblock %}
