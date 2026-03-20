@@ -5,6 +5,7 @@ use App\Controllers\DashboardController;
 use App\Controllers\HomeController;
 use App\Controllers\ProfileController;
 use App\Controllers\StudentController;
+use App\Controllers\PilotController;
 
 return [
     'GET' => [
@@ -19,6 +20,10 @@ return [
         '/students/create' => [StudentController::class, 'create'],
         '/students/edit' => [StudentController::class, 'edit'],
         '/pilot/student-applications' => [StudentController::class, 'pilotStudentApplications'],
+
+        '/pilots' => [PilotController::class, 'index'],
+        '/pilots/create' => [PilotController::class, 'create'],
+        '/pilots/edit' => [PilotController::class, 'edit'],
     ],
 
     'POST' => [
@@ -30,5 +35,9 @@ return [
         '/students/create' => [StudentController::class, 'store'],
         '/students/edit' => [StudentController::class, 'update'],
         '/students/deactivate' => [StudentController::class, 'deactivate'],
+
+        '/pilots/create' => [PilotController::class, 'store'], 
+        '/pilots/edit' => [PilotController::class, 'update'],
+        '/pilots/deactivate' => [PilotController::class, 'deactivate'],
     ],
 ];
