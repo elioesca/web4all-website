@@ -428,4 +428,34 @@ class StudentController extends Controller
 
         $this->redirect('/students/edit?id=' . $userId);
     }
+
+    public function applications(): void
+    {
+        $this->requireLogin();
+
+        if ($_SESSION['user']['role'] !== 'student') {
+            $this->redirect('/dashboard');
+        }
+
+        $studentUserId = (int) $_SESSION['user']['id'];
+
+        $studentModel = new StudentModel();
+
+        $totalApplications = $studentModel->countApplicationsForStudent($studentUserId);
+        $paginator = new Paginator($totalApplications, 8);
+
+        $applications = $studentModel->getApplicationsForStudent(
+            $studentUserId,
+            $paginator->getPerPage(),
+            $paginator->getOffset()
+        );
+
+        $this->render('student/my_applications.html.twig', [
+            'pageTitle' => 'MES CANDIDATURES',
+            'applications' => $applications,
+            'currentPage' => $paginator->getCurrentPage(),
+            'totalPages' => $paginator->getTotalPages(),
+            'basePath' => '/applications'
+        ]);
+    }
 }

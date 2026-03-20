@@ -21,8 +21,10 @@ return [
         '/students' => [StudentController::class, 'index'],
         '/students/create' => [StudentController::class, 'create'],
         '/students/edit' => [StudentController::class, 'edit'],
-        '/pilot/student-applications' => [StudentController::class, 'pilotStudentApplications'],
 
+        '/applications' => [StudentController::class, 'applications'],
+
+        '/pilot/student-applications' => [StudentController::class, 'pilotStudentApplications'],
         '/pilots' => [PilotController::class, 'index'],
         '/pilots/create' => [PilotController::class, 'create'],
         '/pilots/edit' => [PilotController::class, 'edit'],
