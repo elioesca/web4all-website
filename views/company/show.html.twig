@@ -34,7 +34,11 @@
                 <p><strong>Secteur :</strong> {{ company.activity_sector }}</p>
                 <p><strong>Email de contact :</strong> {{ company.email }}</p>
                 <p><strong>Téléphone :</strong> {{ company.phone_number }}</p>
-                <p><strong>Moyenne d’évaluation :</strong> {{ company.average_rating|number_format(1, ',', ' ') }}/5</p>
+                    {% if company.average_rating is not null and company.average_rating > 0 %}
+                        <p><strong>Moyenne d’évaluation :</strong> {{ company.average_rating|number_format(1, ',', ' ') }}/5</p>
+                    {% else %}
+                        <p><strong>Moyenne d’évaluation :</strong> Aucun avis</p>
+                    {% endif %}
                 <p><strong>Nombre de stagiaires ayant postulé :</strong> {{ company.application_count }}</p>
             </div>
         </div>
