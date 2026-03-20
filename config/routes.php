@@ -7,6 +7,7 @@ use App\Controllers\ProfileController;
 use App\Controllers\StudentController;
 use App\Controllers\PilotController;
 use App\Controllers\CompanyController;
+use App\Controllers\OfferController;
 
 return [
     'GET' => [
@@ -30,6 +31,11 @@ return [
         '/companies/show' => [CompanyController::class, 'show'],
         '/companies/create' => [CompanyController::class, 'create'],
         '/companies/edit' => [CompanyController::class, 'edit'],
+
+        '/offers' => [OfferController::class, 'index'],
+        '/offers/show' => [OfferController::class, 'show'],
+        '/offers/create' => [OfferController::class, 'create'],
+        '/offers/edit' => [OfferController::class, 'edit'],
     ],
 
     'POST' => [
@@ -53,5 +59,9 @@ return [
         '/companies/edit' => [CompanyController::class, 'update'],
         '/companies/deactivate' => [CompanyController::class, 'deactivate'],
         '/companies/review' => [CompanyController::class, 'review'],
+
+        '/offers/create' => [OfferController::class, 'store'],
+        '/offers/edit' => [OfferController::class, 'update'],
+        '/offers/deactivate' => [OfferController::class, 'deactivate']
     ],
 ];

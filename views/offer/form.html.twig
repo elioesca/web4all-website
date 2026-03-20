@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle }} - Web4all{% endblock %}
+
+{% block body %}
+<section class="profile-page">
+    <h1 class="profile-title">{{ pageTitle }}</h1>
+    <div class="profile-separator"></div>
+
+    <div class="profile-card">
+        {% if error is defined %}
+            <p class="profile-message profile-message--error">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST" action="{{ formAction }}" class="profile-form" id="offer-form">
+            {% if offer and offer.offer_id is defined %}
+                <input type="hidden" name="offer_id" value="{{ offer.offer_id }}">
+            {% endif %}
+
+            <div class="profile-field">
+                <label for="title">INTITULÉ DU POSTE</label>
+                <input type="text" id="title" name="title" value="{{ offer.title|default('') }}" required>
+            </div>
+
+            <div class="profile-field">
+                <label for="description">DESCRIPTION COURTE</label>
+                <input type="text" id="description" name="description" value="{{ offer.description|default('') }}" placeholder="Résumé en une phrase..." required>
+            </div>
+
+            <div class="profile-field">
+                <label for="company_id">ENTREPRISE</label>
+                <select id="company_id" name="company_id" required>
+                    <option value="">Choisir</option>
+                    {% for company in companies %}
+                        <option value="{{ company.company_id }}" {% if offer and offer.company_id == company.company_id %}selected{% endif %}>
+                            {{ company.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="profile-field">
+                <label for="offer_type_id">TYPE D'OFFRE</label>
+                <select id="offer_type_id" name="offer_type_id" required>
+                    <option value="">Choisir</option>
+                    {% for type in offerTypes %}
+                        <option value="{{ type.offer_type_id }}" {% if offer and offer.offer_type_id == type.offer_type_id %}selected{% endif %}>
+                            {{ type.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="profile-field">
+                <label>COMPÉTENCES</label>
+                <div class="pilot-promotions-list">
+                    {% for skill in skills %}
+                        <label class="pilot-promotion-item">
+                            <input
+                                type="checkbox"
+                                name="skill_ids[]"
+                                value="{{ skill.skill_id }}"
+                                {% if skill.skill_id in selectedSkills %}checked{% endif %}
+                            >
+                            <span>{{ skill.name }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="profile-field-group">
+                <div class="profile-field">
+                    <label for="duration">DURÉE (semaines)</label>
+                    <input type="number" id="duration" name="duration" value="{{ offer.duration|default('') }}" min="1" required>
+                </div>
+                <div class="profile-field">
+                    <label for="available_places">PLACES</label>
+                    <input type="number" id="available_places" name="available_places" value="{{ offer.available_places|default('') }}" min="1" required>
+                </div>
+            </div>
+
+            <div class="profile-field">
+                <label for="salary">INDEMNITÉ (€)</label>
+                <input type="number" step="0.01" id="salary" name="salary" value="{{ offer.salary|default('') }}" min="0" required>
+            </div>
+
+            <div class="profile-field">
+                <label for="content">CONTENU DE L'OFFRE</label>
+                <textarea id="content" name="content">{{ offer.content|default('')|raw }}</textarea>
+            </div>
+
+            <div class="profile-actions">
+                <button type="submit" class="profile-btn profile-btn--offer">
+                    {{ submitLabel }}
+                </button>
+            </div>
+        </form>
+
+        {% if showDeactivate and offer and offer.offer_id is defined %}
+            <form method="POST" action="/offers/deactivate" class="profile-delete-form">
+                <input type="hidden" name="offer_id" value="{{ offer.offer_id }}">
+                <div class="profile-actions">
+                    <button type="submit" class="profile-btn profile-btn--delete">
+                        DESACTIVER
+                    </button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/tinymce@6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+tinymce.init({
+    selector: '#content',
+    language: 'fr_FR',
+    height: 400,
+    menubar: false,
+    plugins: 'lists link autolink',
+    toolbar: 'bold italic underline strikethrough | bullist numlist | link | removeformat',
+    content_style: 'body { font-family: Arial, sans-serif; font-size: 15px; color: #222; line-height: 1.6; }',
+    branding: false,
+    promotion: false,
+    skin: 'oxide',
+    setup: function(editor) {
+        editor.on('change', function() {
+            editor.save();
+        });
+    }
+});
+</script>
+{% endblock %}
