@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ offer.title }} - Web4all{% endblock %}
+
+{% block body %}
+<section class="company-detail-page">
+    <div class="company-detail-header">
+        <p class="company-detail-small-title">Fiche de l'offre</p>
+        <h1 class="company-detail-title">{{ offer.title }}</h1>
+        <p class="offer-detail-company">{{ offer.company_name }}</p>
+        <div class="company-detail-separator"></div>
+    </div>
+
+    {% if user and user.role in ['admin', 'pilot'] %}
+        <div class="company-detail-top-actions">
+            <a href="/offers/edit?id={{ offer.offer_id }}" class="company-manage-btn company-manage-btn--edit">
+                Modifier
+            </a>
+            <form method="POST" action="/offers/deactivate">
+                <input type="hidden" name="offer_id" value="{{ offer.offer_id }}">
+                <button type="submit" class="company-manage-btn company-manage-btn--delete">
+                    Désactiver
+                </button>
+            </form>
+        </div>
+    {% endif %}
+
+    <div class="offer-detail-grid">
+
+        <div class="offer-detail-main">
+            <h2>Description du poste</h2>
+            <div class="company-detail-info-card offer-description-short">
+                <p>{{ offer.description }}</p>
+            </div>
+
+            {% if offer.content %}
+                <h2 style="margin-top: 36px;">Détail de l'offre</h2>
+                <div class="offer-content-block">
+                    {{ offer.content|raw }}
+                </div>
+            {% endif %}
+
+            {% if skills is not empty %}
+                <h2 style="margin-top: 36px;">Compétences requises</h2>
+                <div class="offer-skills-list">
+                    {% for skill in skills %}
+                        <span class="offer-skill-badge">{{ skill.name }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="offer-detail-sidebar">
+            <div class="offer-sidebar-card">
+                <div class="offer-sidebar-row">
+                    <span class="offer-sidebar-label">Durée</span>
+                    <span class="offer-sidebar-value">{{ offer.duration }} semaines</span>
+                </div>
+                <div class="offer-sidebar-row">
+                    <span class="offer-sidebar-label">Indemnité</span>
+                    <span class="offer-sidebar-value">{{ offer.salary|number_format(0, ',', ' ') }} € / mois</span>
+                </div>
+                <div class="offer-sidebar-row">
+                    <span class="offer-sidebar-label">Places disponibles</span>
+                    <span class="offer-sidebar-value">{{ offer.available_places }}</span>
+                </div>
+                <div class="offer-sidebar-row">
+                    <span class="offer-sidebar-label">Candidatures</span>
+                    <span class="offer-sidebar-value">{{ offer.application_count }}</span>
+                </div>
+                <div class="offer-sidebar-row">
+                    <span class="offer-sidebar-label">Entreprise</span>
+                    <span class="offer-sidebar-value">
+                        <a href="/companies/show?id={{ offer.company_id }}">{{ offer.company_name }}</a>
+                    </span>
+                </div>
+
+                {% if user and user.role == 'student' %}
+                    <a href="/applications/create?offer_id={{ offer.offer_id }}" class="offer-apply-btn">
+                        Postuler
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

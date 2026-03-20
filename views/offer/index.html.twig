@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle }} - Web4all{% endblock %}
+
+{% block body %}
+<section class="offer-page">
+    <h1 class="offer-page-title">{{ pageTitle }}</h1>
+    <div class="offer-page-separator"></div>
+
+    <form method="GET" action="/offers" class="offer-filters">
+        <div class="offer-filter-field">
+            <label for="keyword">Mots clés</label>
+            <input type="text" id="keyword" name="keyword" value="{{ keyword }}" placeholder="Développement, Réseau, BTP...">
+        </div>
+
+        <div class="offer-filter-field">
+            <label for="skill_id">Compétences</label>
+            <select id="skill_id" name="skill_id">
+                <option value="">Toutes</option>
+                {% for skill in skills %}
+                    <option value="{{ skill.skill_id }}" {% if skillId == skill.skill_id|striptags %}selected{% endif %}>
+                        {{ skill.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="offer-filter-field">
+            <label for="duration">Durée</label>
+            <select id="duration" name="duration">
+                <option value="">Toutes</option>
+                <option value="6" {% if duration == '6' %}selected{% endif %}>6 semaines</option>
+                <option value="8" {% if duration == '8' %}selected{% endif %}>8 semaines</option>
+                <option value="10" {% if duration == '10' %}selected{% endif %}>10 semaines</option>
+                <option value="12" {% if duration == '12' %}selected{% endif %}>12 semaines</option>
+            </select>
+        </div>
+
+        <div class="offer-filter-actions">
+            <button type="submit" class="offer-filter-btn">Filtrer</button>
+        </div>
+    </form>
+
+    {% if user and user.role in ['admin', 'pilot'] %}
+        <div class="offer-top-actions">
+            <a href="/offers/create" class="offer-manage-btn offer-manage-btn--create">
+                Déposer une offre
+            </a>
+        </div>
+    {% endif %}
+
+    <div class="offer-grid">
+        {% for offer in offers %}
+            <article class="offer-card">
+                <h2>{{ offer.title|upper }}</h2>
+                <p>{{ offer.description }}</p>
+
+                <div class="offer-card-meta">
+                    <span>{{ offer.company_name }}</span>
+                    <span>{{ offer.duration }} semaines</span>
+                    <span>{{ offer.salary|number_format(0, ',', ' ') }} €</span>
+                </div>
+
+                <div class="offer-card-actions">
+                    <a href="/offers/show?id={{ offer.offer_id }}" class="offer-card-btn">
+                        Voir l’offre
+                    </a>
+
+                    {% if user and user.role in ['admin', 'pilot'] %}
+                        <a href="/offers/edit?id={{ offer.offer_id }}" class="offer-card-btn">
+                            Modifier
+                        </a>
+                    {% endif %}
+                </div>
+            </article>
+        {% else %}
+            <p class="offer-empty">Aucune offre trouvée.</p>
+        {% endfor %}
+    </div>
+
+    {% include 'partials/pagination.html.twig' with {
+        currentPage: currentPage,
+        totalPages: totalPages,
+        basePath: basePath,
+        search: null,
+        extraQuery: 'keyword=' ~ keyword|url_encode ~ '&skill_id=' ~ skillId|url_encode ~ '&duration=' ~ duration|url_encode
+    } %}
+</section>
+{% endblock %}
