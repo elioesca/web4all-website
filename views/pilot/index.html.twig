@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle }} - Web4all{% endblock %}
+
+{% block body %}
+<section class="student-list-page">
+    <h1 class="student-list-title">{{ pageTitle }}</h1>
+    <div class="student-list-separator"></div>
+
+    <div class="student-toolbar">
+        <form method="GET" action="{{ basePath }}" class="student-search-form">
+            <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                placeholder="Rechercher un pilote"
+                class="student-search-input"
+            >
+            <button type="submit" class="student-action-btn student-action-btn--search">
+                Rechercher
+            </button>
+        </form>
+
+        <a href="/pilots/create" class="student-action-btn student-action-btn--create">
+            Créer un compte pilote
+        </a>
+    </div>
+
+    <div class="student-table-wrapper">
+        <div class="student-table-head">
+            <span>PILOTE</span>
+            <span>EMAIL</span>
+            <span>TELEPHONE</span>
+            <span>COMPTE</span>
+            <span>ACTION</span>
+        </div>
+
+        {% if pilots is not empty %}
+            {% for pilot in pilots %}
+                <div class="student-table-row">
+                    <div class="student-cell student-cell--student">
+                        <strong>{{ pilot.last_name }} {{ pilot.first_name }}</strong>
+                    </div>
+
+                    <div class="student-cell">
+                        {{ pilot.email }}
+                    </div>
+
+                    <div class="student-cell">
+                        {{ pilot.phone_number ?: '-' }}
+                    </div>
+
+                    <div class="student-cell">
+                        {% if pilot.is_valid %}
+                            Actif
+                        {% else %}
+                            Désactivé
+                        {% endif %}
+                    </div>
+
+                    <div class="student-cell student-actions">
+                        <a href="/pilots/edit?id={{ pilot.user_id }}" class="student-row-btn">
+                            Modifier
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="student-table-row student-table-row--empty">
+                <div class="student-cell student-cell--full">
+                    Aucun pilote trouvé.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    {% include 'partials/pagination.html.twig' with {
+        currentPage: currentPage,
+        totalPages: totalPages,
+        basePath: basePath,
+        search: search
+    } %}
+</section>
+{% endblock %}

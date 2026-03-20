@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle }} - Web4all{% endblock %}
+
+{% block body %}
+<section class="profile-page">
+    <h1 class="profile-title">{{ pageTitle }}</h1>
+    <div class="profile-separator"></div>
+
+    <div class="profile-card">
+        {% if error is defined %}
+            <p class="profile-message profile-message--error">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST" action="{{ formAction }}" class="profile-form">
+            {% if pilot and pilot.user_id is defined %}
+                <input type="hidden" name="user_id" value="{{ pilot.user_id }}">
+            {% endif %}
+
+            <div class="profile-field">
+                <label for="last_name">NOM</label>
+                <input
+                    type="text"
+                    id="last_name"
+                    name="last_name"
+                    placeholder="Nom"
+                    value="{{ pilot.last_name|default('') }}"
+                    required
+                >
+            </div>
+
+            <div class="profile-field">
+                <label for="first_name">PRENOM</label>
+                <input
+                    type="text"
+                    id="first_name"
+                    name="first_name"
+                    placeholder="Prénom"
+                    value="{{ pilot.first_name|default('') }}"
+                    required
+                >
+            </div>
+
+            <div class="profile-field">
+                <label for="email">EMAIL</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="prenom@example.com"
+                    value="{{ pilot.email|default('') }}"
+                    required
+                >
+            </div>
+
+            <div class="profile-field">
+                <label for="phone_number">TELEPHONE</label>
+                <input
+                    type="text"
+                    id="phone_number"
+                    name="phone_number"
+                    placeholder="Numéro de téléphone"
+                    value="{{ pilot.phone_number|default('') }}"
+                >
+            </div>
+
+            <div class="profile-field">
+                <label>PROMOTIONS</label>
+
+                <div class="pilot-promotions-list">
+                    {% for promotion in promotions %}
+                        <label class="pilot-promotion-item">
+                            <input
+                                type="checkbox"
+                                name="promotion_ids[]"
+                                value="{{ promotion.promotion_id }}"
+                                {% if promotion.promotion_id in selectedPromotions %}checked{% endif %}
+                            >
+                            <span>{{ promotion.name }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="profile-field">
+                <label for="password">MOT DE PASSE</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Mot de passe"
+                >
+            </div>
+
+            <div class="profile-actions">
+                <button type="submit" class="profile-btn profile-btn--edit">
+                    {{ submitLabel }}
+                </button>
+            </div>
+        </form>
+
+        {% if showDeactivate and pilot and pilot.user_id is defined %}
+            <form method="POST" action="/pilots/deactivate" class="profile-delete-form">
+                <input type="hidden" name="user_id" value="{{ pilot.user_id }}">
+
+                <div class="profile-actions">
+                    <button type="submit" class="profile-btn profile-btn--delete">
+                        DESACTIVER
+                    </button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
