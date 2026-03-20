@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+<section class="auth-page">
+    <h1 class="auth-title">Web4all</h1>
+    <div class="auth-separator"></div>
+
+    <div class="auth-container auth-container--center">
+        <div class="auth-box">
+            <h2>Connexion ↲</h2>
+
+            {% if error %}
+                <p class="auth-error">{{ error }}</p>
+            {% endif %}
+
+            <form method="POST" action="/login" class="auth-form">
+                <input type="email" name="email" placeholder="Saisissez votre e-mail" required>
+                <input type="password" name="password" placeholder="Mot de passe" required>
+
+                <div class="auth-buttons">
+                    <button type="submit" class="btn-black">Se connecter</button>
+                    <a href="/forgot-password" class="btn-light btn-link">Mot de passe oublié ?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

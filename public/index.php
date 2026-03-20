@@ -1,26 +1,30 @@
 <?php
+
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-//chargement de l'autoloader de composer
-require_once __DIR__.'/../vendor/autoload.php';
 
-//lire l'uri
+session_start();
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$routes = require __DIR__ . '/../config/routes.php';
+
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$method = $_SERVER['REQUEST_METHOD'];
 
-//instancier le contrôleur
-$controller = new \App\Controllers\MainController();
+if (isset($routes[$method][$uri])) {
+    [$controllerClass, $action] = $routes[$method][$uri];
 
-//routing
-switch ($uri) {
-
-    case '/':
-        $controller->home();
-        break;
-
-    default:
-        http_response_code(404);
-        echo "Page not found";
-        break;
+    $controller = new $controllerClass();
+    $controller->$action();
+    exit;
 }
 
-?>
+http_response_code(404);
+
+$loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../views');
+$twig = new \Twig\Environment($loader, ['cache' => false]);
+
+echo $twig->render('404.html.twig', [
+    'user' => $_SESSION['user'] ?? null
+]);

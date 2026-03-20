@@ -1,11 +1,29 @@
-{# views/home.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Accueil - Web4all{% endblock %}
 
-{% block content %}
-    <div style="padding: 100px 60px;">
-        <h1>Trouver le bon stage, a travers une interface claire</h1>
-        <p>La solution complète pour gérer votre entreprise en toute simplicité.</p>
+{% block body %}
+<section class="hero">
+    <h1>Trouver le bon stage, à travers une interface claire</h1>
+
+    <div class="home-cards">
+        <a href="/offers" class="home-card pink">
+            <span>Offres</span>
+        </a>
+
+        <a href="/companies" class="home-card yellow">
+            <span>Entreprise</span>
+        </a>
+
+        {% if user %}
+            <a href="/wishlist" class="home-card red">
+                <span>Wish-list</span>
+            </a>
+
+            <a href="/dashboard" class="home-card purple">
+                <span>Tableau de bord</span>
+            </a>
+        {% endif %}
     </div>
+</section>
 {% endblock %}

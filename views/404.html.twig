@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page introuvable{% endblock %}
+
+{% block body %}
+<section class="error-page">
+    <h1 class="error-code">404</h1>
+    <div class="auth-separator"></div>
+
+    <div class="error-content">
+        <h2>Page introuvable</h2>
+        <p>La page que vous recherchez n’existe pas ou n’est plus disponible.</p>
+        <a href="/" class="btn-black">Retour à l’accueil</a>
+    </div>
+</section>
+{% endblock %}

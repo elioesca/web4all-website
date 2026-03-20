@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle }} - Web4all{% endblock %}
+
+{% block body %}
+<section class="student-list-page">
+    <h1 class="student-list-title">{{ pageTitle }}</h1>
+    <div class="student-list-separator"></div>
+
+    <div class="student-toolbar">
+        <form method="GET" action="{{ basePath }}" class="student-search-form">
+            <input
+                type="text"
+                name="search"
+                value="{{ search }}"
+                placeholder="Rechercher un étudiant, une promotion ou un statut"
+                class="student-search-input"
+            >
+            <button type="submit" class="student-action-btn student-action-btn--search">
+                Rechercher
+            </button>
+        </form>
+
+        <a href="/students/create" class="student-action-btn student-action-btn--create">
+            Créer un compte étudiant
+        </a>
+    </div>
+
+    <div class="student-table-wrapper">
+        <div class="student-table-head">
+            <span>ETUDIANT</span>
+            <span>PROMOTION</span>
+            <span>STATUT</span>
+            <span>COMPTE</span>
+            <span>ACTION</span>
+        </div>
+
+        {% if students is not empty %}
+            {% for student in students %}
+                <div class="student-table-row">
+                    <div class="student-cell student-cell--student">
+                        <strong>{{ student.last_name }} {{ student.first_name }}</strong><br>
+                        <small>{{ student.email }}</small>
+                    </div>
+
+                    <div class="student-cell">
+                        {{ student.promotion_name }}
+                    </div>
+
+                    <div class="student-cell">
+                        {{ student.search_status }}
+                    </div>
+
+                    <div class="student-cell">
+                        {% if student.is_valid %}
+                            Actif
+                        {% else %}
+                            Désactivé
+                        {% endif %}
+                    </div>
+
+                    <div class="student-cell student-actions">
+                        <a href="/students/edit?id={{ student.user_id }}" class="student-row-btn">
+                            Modifier
+                        </a>
+
+                        {% if user.role == 'pilot' and student.can_view_applications %}
+                            <a href="/pilot/student-applications?id={{ student.user_id }}" class="student-row-btn">
+                                Candidatures
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="student-table-row student-table-row--empty">
+                <div class="student-cell student-cell--full">
+                    Aucun étudiant trouvé.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    {% include 'partials/pagination.html.twig' with {
+        currentPage: currentPage,
+        totalPages: totalPages,
+        basePath: basePath,
+        search: search
+    } %}
+</section>
+{% endblock %}

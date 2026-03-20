@@ -1,0 +1,93 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modification profil - Web4all{% endblock %}
+
+{% block body %}
+<section class="profile-page">
+    <h1 class="profile-title">MODIFICATION PROFIL</h1>
+    <div class="profile-separator"></div>
+
+    <div class="profile-card">
+        {% if error is defined %}
+            <p class="profile-message profile-message--error">{{ error }}</p>
+        {% endif %}
+
+        {% if success is defined %}
+            <p class="profile-message profile-message--success">{{ success }}</p>
+        {% endif %}
+
+        <form method="POST" action="/profile" class="profile-form">
+            <div class="profile-field">
+                <label for="last_name">NOM</label>
+                <input
+                    type="text"
+                    id="last_name"
+                    name="last_name"
+                    placeholder="Nom"
+                    value="{{ profileUser.last_name|default('') }}"
+                    required
+                >
+            </div>
+
+            <div class="profile-field">
+                <label for="first_name">PRENOM</label>
+                <input
+                    type="text"
+                    id="first_name"
+                    name="first_name"
+                    placeholder="Prénom"
+                    value="{{ profileUser.first_name|default('') }}"
+                    required
+                >
+            </div>
+
+            <div class="profile-field">
+                <label for="email">EMAIL</label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="prenom@example.com"
+                    value="{{ profileUser.email|default('') }}"
+                    required
+                >
+            </div>
+
+            <div class="profile-field">
+                <label for="phone_number">TELEPHONE</label>
+                <input
+                    type="text"
+                    id="phone_number"
+                    name="phone_number"
+                    placeholder="Téléphone"
+                    value="{{ profileUser.phone_number|default('') }}"
+                >
+            </div>
+
+            <div class="profile-field">
+                <label for="password">MOT DE PASSE</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Mot de passe"
+                >
+            </div>
+
+            <div class="profile-actions">
+                <button type="submit" class="profile-btn profile-btn--edit">
+                    MODIFIER
+                </button>
+            </div>
+        </form>
+
+        <form method="POST" action="/profile/delete" class="profile-delete-form">
+            <div class="profile-actions">
+                <button type="submit" class="profile-btn profile-btn--delete">
+                    SUPPRIMER
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}
