@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle }} - Web4all{% endblock %}
+
+{% block body %}
+<section class="profile-page">
+    <h1 class="profile-title">{{ pageTitle }}</h1>
+    <div class="profile-separator"></div>
+
+    <div class="profile-card">
+        {% if error is defined %}
+            <p class="profile-message profile-message--error">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST" action="{{ formAction }}" class="profile-form">
+            {% if company and company.company_id is defined %}
+                <input type="hidden" name="company_id" value="{{ company.company_id }}">
+            {% endif %}
+
+            <div class="profile-field">
+                <label for="name">NOM</label>
+                <input type="text" id="name" name="name" value="{{ company.name|default('') }}" required>
+            </div>
+
+            <div class="profile-field">
+                <label for="activity_sector">SECTEUR</label>
+                <input type="text" id="activity_sector" name="activity_sector" value="{{ company.activity_sector|default('') }}" required>
+            </div>
+
+            <div class="profile-field">
+                <label for="email">EMAIL</label>
+                <input type="email" id="email" name="email" value="{{ company.email|default('') }}" required>
+            </div>
+
+            <div class="profile-field">
+                <label for="phone_number">TELEPHONE</label>
+                <input type="text" id="phone_number" name="phone_number" value="{{ company.phone_number|default('') }}" required>
+            </div>
+
+            <div class="profile-field">
+                <label for="description">DESCRIPTION</label>
+                <textarea id="description" name="description" rows="6" required>{{ company.description|default('') }}</textarea>
+            </div>
+
+            <div class="profile-actions">
+                <button type="submit" class="profile-btn profile-btn--edit">
+                    {{ submitLabel }}
+                </button>
+            </div>
+        </form>
+
+        {% if showDeactivate and company and company.company_id is defined %}
+            <form method="POST" action="/companies/deactivate" class="profile-delete-form">
+                <input type="hidden" name="company_id" value="{{ company.company_id }}">
+                <div class="profile-actions">
+                    <button type="submit" class="profile-btn profile-btn--delete">
+                        DESACTIVER
+                    </button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

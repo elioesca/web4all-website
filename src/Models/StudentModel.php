@@ -360,5 +360,18 @@ class StudentModel
 
         return (int) ($result['total'] ?? 0);
     }
+
+    public function reactivateStudent(int $userId): bool
+    {
+        $stmt = $this->db->prepare("
+            UPDATE user
+            SET is_valid = 1
+            WHERE user_id = :user_id
+        ");
+
+        return $stmt->execute([
+            'user_id' => $userId
+        ]);
+    }
 }
 
