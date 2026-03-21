@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle }} - Web4all{% endblock %}
+
+{% block body %}
+<section class="wishlist-page">
+    <h1 class="wishlist-title">{{ pageTitle }}</h1>
+    <div class="wishlist-separator"></div>
+
+    <div class="wishlist-table-wrapper">
+        <div class="wishlist-table-head">
+            <span>OFFRES</span>
+            <span>COMPETENCES</span>
+            <span>DUREE</span>
+            <span>ACTION</span>
+        </div>
+
+        {% if offers is not empty %}
+            {% for offer in offers %}
+                <div class="wishlist-table-row" data-wishlist-row="{{ offer.offer_id }}">
+                    <div class="wishlist-cell">
+                        <a href="/offers/show?id={{ offer.offer_id }}" class="wishlist-offer-link">
+                            {{ offer.title|upper }}
+                        </a>
+                    </div>
+
+                    <div class="wishlist-cell">
+                        {{ offer.skills }}
+                    </div>
+
+                    <div class="wishlist-cell">
+                        {{ offer.duration }} semaines
+                    </div>
+
+                    <div class="wishlist-cell wishlist-actions">
+                        <button
+                            type="button"
+                            class="wishlist-remove-btn js-wishlist-toggle"
+                            data-offer-id="{{ offer.offer_id }}"
+                            data-label-add="Ajouter à la wish-list"
+                            data-label-remove="Retirer de la wish-list"
+                        >
+                            RETIRER
+                        </button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="wishlist-table-row wishlist-table-row--empty">
+                <div class="wishlist-cell wishlist-cell--full">
+                    Aucune offre dans votre wish-list.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    {% include 'partials/pagination.html.twig' with {
+        currentPage: currentPage,
+        totalPages: totalPages,
+        basePath: basePath,
+        search: null
+    } %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+    <script src="/js/wishlist.js"></script>
+{% endblock %}

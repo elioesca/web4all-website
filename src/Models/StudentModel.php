@@ -373,5 +373,54 @@ class StudentModel
             'user_id' => $userId
         ]);
     }
+
+    public function countApplicationsForStudent(int $studentUserId): int
+    {
+        $sql = "
+            SELECT COUNT(*) AS total
+            FROM application a
+            WHERE a.student_user_id = :student_user_id
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'student_user_id' => $studentUserId
+        ]);
+
+        $result = $stmt->fetch();
+
+        return (int) ($result['total'] ?? 0);
+    }
+
+    public function getApplicationsForStudent(
+        int $studentUserId,
+        int $limit = 10,
+        int $offset = 0
+    ): array {
+        $sql = "
+            SELECT
+                o.title,
+                a.application_date,
+                aps.status AS application_status,
+                a.cover_letter_path,
+                a.cv_path
+            FROM application a
+            INNER JOIN offer o ON o.offer_id = a.offer_id
+            INNER JOIN application_status aps ON aps.application_status_id = a.application_status_id
+            WHERE a.student_user_id = :student_user_id
+            ORDER BY a.application_date DESC
+            LIMIT :limit OFFSET :offset
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':student_user_id', $studentUserId, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
 }
+
+
 

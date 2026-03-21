@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle }} - Web4all{% endblock %}
+
+{% block body %}
+<section class="application-list-page">
+    <h1 class="application-list-title">{{ pageTitle }}</h1>
+    <div class="application-list-separator"></div>
+
+    <div class="application-table-wrapper">
+        <div class="application-table-head">
+            <span>OFFRES</span>
+            <span>DATE</span>
+            <span>STATUT</span>
+            <span>ACTION</span>
+        </div>
+
+        {% if applications is not empty %}
+            {% for application in applications %}
+                <div class="application-table-row">
+                    <div class="application-cell application-cell--offer">
+                        {{ application.title }}
+                    </div>
+
+                    <div class="application-cell">
+                        {{ application.application_date|date('d F Y') }}
+                    </div>
+
+                    <div class="application-cell">
+                        {{ application.application_status }}
+                    </div>
+
+                    <div class="application-cell application-actions">
+                        <a href="/{{ application.cover_letter_path }}" target="_blank" class="application-row-btn">
+                            Voir la lettre
+                        </a>
+
+                        <a href="/{{ application.cv_path }}" target="_blank" class="application-row-btn">
+                            Voir le CV
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="application-table-row application-table-row--empty">
+                <div class="application-cell application-cell--full">
+                    Aucune candidature trouvée.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    {% include 'partials/pagination.html.twig' with {
+        currentPage: currentPage,
+        totalPages: totalPages,
+        basePath: basePath,
+        search: null
+    } %}
+</section>
+{% endblock %}
