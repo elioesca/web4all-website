@@ -4,8 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Web4all{% endblock %}</title>
+
+
+    <meta name="description" content="{% block meta_description %}Web4all - Plateforme de gestion de stages, candidatures et suivi étudiant.{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}stage, offre de stage, candidature, étudiant, entreprise{% endblock %}">
+    <meta name="robots" content="{% block meta_robots %}index, follow{% endblock %}">
+    <meta name="author" content="Web4all">
+    <meta property="og:title" content="{% block og_title %}Web4all{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Plateforme de gestion de stages, candidatures et suivi étudiant.{% endblock %}">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="fr_FR">
+
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+    
 </head>
 <body>
     {% include 'partials/navbar.html.twig' %}

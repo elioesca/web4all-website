@@ -10,6 +10,7 @@ use App\Controllers\CompanyController;
 use App\Controllers\OfferController;
 use App\Controllers\ApplicationController;
 use App\Controllers\WishlistController;
+use App\Controllers\LegalController;
 
 return [
     'GET' => [
@@ -43,6 +44,8 @@ return [
         '/offers/show' => [OfferController::class, 'show'],
         '/offers/create' => [OfferController::class, 'create'],
         '/offers/edit' => [OfferController::class, 'edit'],
+
+        '/mentions-legales' => [LegalController::class, 'index'],
     ],
 
     'POST' => [

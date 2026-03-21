@@ -1,6 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ offer.title }} - Web4all{% endblock %}
+{% block meta_description %}{{ offer.description }}{% endblock %}
+{% block og_title %}{{ offer.title }} chez {{ offer.company_name }}{% endblock %}
+{% block og_description %}{{ offer.description }}{% endblock %}
 
 {% block body %}
 <section class="company-detail-page">

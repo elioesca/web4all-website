@@ -1,0 +1,1 @@
+{"version":2,"defects":[],"times":{"LegalControllerTest::testLegalPageReturns200":0.039,"LegalControllerTest::testLegalPageContainsMentionsLegales":0.013,"LegalControllerTest::testLegalPageContainsCookiesSection":0.013,"LegalControllerTest::testLegalPageContainsConfidentialiteSection":0.012}}
