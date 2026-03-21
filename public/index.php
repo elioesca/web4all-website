@@ -3,7 +3,11 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-session_start();
+session_start([
+    'cookie_secure' => true,
+    'cookie_httponly' => true,
+    'cookie_samesite' => 'Strict'
+]);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
