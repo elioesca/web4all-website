@@ -1,6 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ company.name }} - Web4all{% endblock %}
+{% block meta_description %}Fiche entreprise {{ company.name }} - {{ company.description|slice(0, 150) }}{% endblock %}
+{% block og_title %}{{ company.name }} - Web4all{% endblock %}
+{% block og_description %}{{ company.description|slice(0, 150) }}{% endblock %}
 
 {% block body %}
 <section class="company-detail-page">

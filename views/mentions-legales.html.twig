@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mentions légales - Web4all{% endblock %}
+{% block meta_description %}Mentions légales, politique de confidentialité et cookies de Web4all.{% endblock %}
+{% block meta_keywords %}mentions légales, RGPD, cookies, confidentialité{% endblock %}
+
+{% block body %}
+<section class="legal-page">
+    <div class="legal-header">
+        <h1 class="legal-title">Mentions légales</h1>
+        <div class="legal-separator"></div>
+    </div>
+
+    <div class="legal-content">
+
+        <div class="legal-block" id="informations-legales">
+            <h2>Informations légales</h2>
+            <p>Web4all est une plateforme de gestion de stages développée dans le cadre d'un projet étudiant. Elle permet aux étudiants de consulter des offres de stage, de postuler et de suivre leurs candidatures.</p>
+            <p>Ce site est hébergé localement à des fins de démonstration et n'est pas destiné à un usage commercial.</p>
+        </div>
+
+        <div class="legal-block" id="responsabilite">
+            <h2>Responsabilité</h2>
+            <p>Les informations présentes sur ce site sont fournies à titre indicatif. Web4all ne saurait être tenu responsable des erreurs ou omissions dans les contenus publiés, ni des dommages directs ou indirects résultant de l'utilisation de la plateforme.</p>
+            <p>Les offres de stage sont créées par les utilisateurs administrateurs et pilotes. Web4all ne garantit pas l'exactitude des informations fournies par les entreprises.</p>
+        </div>
+
+        <div class="legal-block" id="droit-auteur">
+            <h2>Droit d'auteur</h2>
+            <p>L'ensemble des contenus présents sur ce site (textes, graphismes, logo, structure) sont la propriété exclusive de Web4all ou de ses contributeurs. Toute reproduction, même partielle, est interdite sans autorisation préalable.</p>
+        </div>
+
+        <div class="legal-block" id="protection-donnees">
+            <h2>Protection des données</h2>
+            <p>Web4all collecte des données personnelles (nom, prénom, adresse email, numéro de téléphone) dans le but unique de gérer les comptes utilisateurs et les candidatures de stage.</p>
+            <p>Ces données ne sont pas transmises à des tiers. Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et de suppression de vos données en contactant un administrateur de la plateforme.</p>
+            <p>Les mots de passe sont stockés sous forme chiffrée et ne sont jamais accessibles en clair.</p>
+        </div>
+
+        <div class="legal-block" id="politique-confidentialite">
+            <h2>Politique de confidentialité</h2>
+            <p>Web4all s'engage à protéger la vie privée de ses utilisateurs. Les données collectées (nom, prénom, email, téléphone, fichiers CV et lettres de motivation) sont utilisées exclusivement dans le cadre du fonctionnement de la plateforme.</p>
+            <p>Aucune donnée n'est revendue, partagée avec des annonceurs ou utilisée à des fins commerciales. Les données sont conservées le temps de l'utilisation du compte et supprimées sur demande.</p>
+            <p>Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez des droits suivants : droit d'accès, droit de rectification, droit à l'effacement, droit à la portabilité. Pour exercer ces droits, contactez un administrateur de la plateforme.</p>
+        </div>
+
+        <div class="legal-block" id="cookies">
+            <h2>Cookies</h2>
+            <p>Ce site utilise uniquement des cookies de session nécessaires au fonctionnement de la plateforme (maintien de la connexion). Aucun cookie de traçage ou publicitaire n'est utilisé.</p>
+            <p>En utilisant ce site, vous acceptez l'utilisation de ces cookies techniques indispensables.</p>
+        </div>
+
+        <div class="legal-block legal-block--last" id="contact">
+            <h2>Contact</h2>
+            <p>Pour toute question relative aux présentes mentions légales ou à vos données personnelles, vous pouvez contacter l'équipe Web4all via contact@web4all.local</p>
+            <p class="legal-update">Dernière mise à jour : mars 2026</p>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

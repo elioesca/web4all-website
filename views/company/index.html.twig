@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ pageTitle }} - Web4all{% endblock %}
+{% block meta_description %}Découvrez les entreprises partenaires de Web4all qui proposent des offres de stage.{% endblock %}
 
 {% block body %}
 <section class="company-page">
@@ -66,10 +67,6 @@
                 </div>
 
                 <div class="company-card-actions">
-                    <a href="/offers?company={{ company.company_id }}" class="company-card-btn">
-                        Voir les offres
-                    </a>
-
                     <a href="/companies/show?id={{ company.company_id }}" class="company-card-btn">
                         Voir la fiche
                     </a>

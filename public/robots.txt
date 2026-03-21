@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+Allow: /offers
+Allow: /offers/show
+Allow: /companies
+Allow: /companies/show
+Allow: /mentions-legales
+
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /wishlist
+Disallow: /applications
+Disallow: /pilots
+Disallow: /students
+Disallow: /login
+Disallow: /logout
+Disallow: /forgot-password
+Disallow: /pilot/student-applications
+Disallow: /offers/create
+Disallow: /offers/edit
+Disallow: /companies/create
+Disallow: /companies/edit
+
+Sitemap: http://web4all.local/sitemap.xml

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use PDO;
 use Throwable;
-use App\Models\ApplicationModel;
 
 class OfferModel
 {
