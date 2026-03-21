@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle }} - Web4all{% endblock %}
+
+{% block body %}
+<section class="offer-stats-page">
+    <h1 class="offer-stats-title">{{ pageTitle }}</h1>
+    <div class="offer-stats-separator"></div>
+
+    <div class="offer-stats-carousel">
+        <button type="button" class="offer-stats-nav offer-stats-nav--prev" id="statsPrev">
+            ‹
+        </button>
+
+        <div class="offer-stats-track-wrapper">
+            <div class="offer-stats-track" id="statsTrack">
+
+                <article class="offer-stats-slide">
+                    <div class="offer-stats-card">
+                        <h2>Nombre total d'offres</h2>
+                        <p class="offer-stats-big-number">{{ totalOffers }}</p>
+                        <p class="offer-stats-small-text">offres actuellement disponibles</p>
+                    </div>
+                </article>
+
+                <article class="offer-stats-slide">
+                    <div class="offer-stats-card">
+                        <h2>Moyenne des candidatures</h2>
+                        <p class="offer-stats-big-number">{{ averageApplications|number_format(1, ',', ' ') }}</p>
+                        <p class="offer-stats-small-text">candidature(s) par offre</p>
+                    </div>
+                </article>
+
+                <article class="offer-stats-slide">
+                    <div class="offer-stats-card">
+                        <h2>Répartition par durée</h2>
+
+                        <div class="offer-stats-bars">
+                            {% for item in distribution %}
+                                <div class="offer-stats-bar-row">
+                                    <span class="offer-stats-bar-label">{{ item.duration }} semaines</span>
+
+                                    <div class="offer-stats-bar-wrap">
+                                        <div
+                                            class="offer-stats-bar"
+                                            style="width: {% if maxDistribution > 0 %}{{ (item.total / maxDistribution) * 100 }}{% else %}0{% endif %}%"
+                                        ></div>
+                                    </div>
+
+                                    <span class="offer-stats-bar-value">{{ item.total }}</span>
+                                </div>
+                            {% else %}
+                                <p>Aucune donnée disponible.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </article>
+
+                <article class="offer-stats-slide">
+                    <div class="offer-stats-card">
+                        <h2>Top wish-list</h2>
+
+                        <div class="offer-stats-ranking">
+                            {% for offer in topWishlisted %}
+                                <div class="offer-stats-ranking-row">
+                                    <span class="offer-stats-ranking-title">{{ offer.title }}</span>
+                                    <span class="offer-stats-ranking-badge">{{ offer.wishlist_count }}</span>
+                                </div>
+                            {% else %}
+                                <p>Aucune donnée disponible.</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+
+        <button type="button" class="offer-stats-nav offer-stats-nav--next" id="statsNext">
+            ›
+        </button>
+    </div>
+
+    <div class="offer-stats-dots" id="statsDots">
+        <button type="button" class="offer-stats-dot is-active" data-slide="0"></button>
+        <button type="button" class="offer-stats-dot" data-slide="1"></button>
+        <button type="button" class="offer-stats-dot" data-slide="2"></button>
+        <button type="button" class="offer-stats-dot" data-slide="3"></button>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+    <script src="/js/offer-stats.js"></script>
+{% endblock %}

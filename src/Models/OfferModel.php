@@ -356,4 +356,69 @@ class OfferModel
             'offer_id' => $offerId
         ]);
     }
+
+    public function getTotalActiveOffers(): int
+    {
+        $stmt = $this->db->query("
+            SELECT COUNT(*) AS total
+            FROM offer
+            WHERE is_valid = 1
+        ");
+
+        $result = $stmt->fetch();
+
+        return (int) ($result['total'] ?? 0);
+    }
+
+    public function getAverageApplicationsPerOffer(): float
+    {
+        $stmt = $this->db->query("
+            SELECT AVG(app_count) AS average_applications
+            FROM (
+                SELECT o.offer_id, COUNT(a.application_id) AS app_count
+                FROM offer o
+                LEFT JOIN application a ON a.offer_id = o.offer_id
+                WHERE o.is_valid = 1
+                GROUP BY o.offer_id
+            ) AS stats
+        ");
+
+        $result = $stmt->fetch();
+
+        return (float) ($result['average_applications'] ?? 0);
+    }
+
+    public function getOfferDistributionByDuration(): array
+    {
+        $stmt = $this->db->query("
+            SELECT duration, COUNT(*) AS total
+            FROM offer
+            WHERE is_valid = 1
+            GROUP BY duration
+            ORDER BY duration ASC
+        ");
+
+        return $stmt->fetchAll();
+    }
+
+    public function getTopWishlistedOffers(int $limit = 5): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT
+                o.offer_id,
+                o.title,
+                COUNT(w.offer_id) AS wishlist_count
+            FROM offer o
+            LEFT JOIN wishlist w ON w.offer_id = o.offer_id
+            WHERE o.is_valid = 1
+            GROUP BY o.offer_id
+            ORDER BY wishlist_count DESC, o.title ASC
+            LIMIT :limit
+        ");
+
+        $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
 }

@@ -44,6 +44,7 @@ return [
         '/offers/show' => [OfferController::class, 'show'],
         '/offers/create' => [OfferController::class, 'create'],
         '/offers/edit' => [OfferController::class, 'edit'],
+        '/offers/stats' => [OfferController::class, 'stats'],
 
         '/mentions-legales' => [LegalController::class, 'index'],
     ],
