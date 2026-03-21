@@ -76,13 +76,37 @@
                 </div>
 
                 {% if user and user.role == 'student' %}
-                    <a href="/applications/create?offer_id={{ offer.offer_id }}" class="offer-apply-btn">
-                        Postuler
-                    </a>
+                    <button
+                        type="button"
+                        class="offer-wishlist-btn js-wishlist-toggle {% if isInWishlist %}is-active{% endif %}"
+                        data-offer-id="{{ offer.offer_id }}"
+                        data-label-add="Ajouter à la wish-list"
+                        data-label-remove="Retirer de la wish-list"
+                    >
+                        {% if isInWishlist %}
+                            Retirer de la wish-list
+                        {% else %}
+                            Ajouter à la wish-list
+                        {% endif %}
+                    </button>
+
+                    {% if hasAlreadyApplied %}
+                        <div class="offer-apply-btn offer-apply-btn--disabled">
+                            Déjà postulé
+                        </div>
+                    {% else %}
+                        <a href="/applications/create?offer_id={{ offer.offer_id }}" class="offer-apply-btn">
+                            Postuler
+                        </a>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>
 
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+    <script src="/js/wishlist.js"></script>
 {% endblock %}

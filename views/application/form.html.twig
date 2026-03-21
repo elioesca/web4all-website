@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ pageTitle }} - Web4all{% endblock %}
+
+{% block body %}
+<section class="application-form-page">
+    <h1 class="application-form-title">POSTULER À UNE OFFRE</h1>
+    <div class="application-form-separator"></div>
+
+    <div class="application-form-card">
+        {% if error is defined %}
+            <p class="profile-message profile-message--error">{{ error }}</p>
+        {% endif %}
+
+        <div class="application-form-offer-box">
+            <h2>{{ offer.title }}</h2>
+            <p class="application-form-company">{{ offer.company_name }}</p>
+            <p class="application-form-description">{{ offer.description }}</p>
+        </div>
+
+        {% if not alreadyApplied %}
+            <form method="POST" action="/applications/create" enctype="multipart/form-data" class="application-form">
+                <input type="hidden" name="offer_id" value="{{ offer.offer_id }}">
+
+                <div class="profile-field">
+                    <label>CV (PDF)</label>
+                    <label class="file-upload-label" for="cv">
+                        <span class="file-upload-btn">Choisir un fichier</span>
+                        <span class="file-upload-name" id="cv-name">Aucun fichier choisi</span>
+                    </label>
+                    <input type="file" id="cv" name="cv" accept="application/pdf" required style="display:none">
+                </div>
+
+                <div class="profile-field">
+                    <label>LETTRE DE MOTIVATION (PDF)</label>
+                    <label class="file-upload-label" for="cover_letter">
+                        <span class="file-upload-btn">Choisir un fichier</span>
+                        <span class="file-upload-name" id="cover-name">Aucun fichier choisi</span>
+                    </label>
+                    <input type="file" id="cover_letter" name="cover_letter" accept="application/pdf" required style="display:none">
+                </div>
+
+                <div class="profile-actions">
+                    <button type="submit" class="profile-btn profile-btn--offer">
+                        ENVOYER MA CANDIDATURE
+                    </button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+</section>
+<script>
+    document.getElementById('cv').addEventListener('change', function() {
+        document.getElementById('cv-name').textContent = this.files[0]?.name ?? 'Aucun fichier choisi';
+    });
+    document.getElementById('cover_letter').addEventListener('change', function() {
+        document.getElementById('cover-name').textContent = this.files[0]?.name ?? 'Aucun fichier choisi';
+    });
+</script>
+{% endblock %}
+

@@ -71,6 +71,22 @@
                             Modifier
                         </a>
                     {% endif %}
+
+                    {% if user and user.role == 'student' %}
+                        <button
+                            type="button"
+                            class="offer-card-btn offer-card-btn--wishlist js-wishlist-toggle {% if offer.offer_id in wishlistOfferIds %}is-active{% endif %}"
+                            data-offer-id="{{ offer.offer_id }}"
+                            data-label-add="Ajouter à la wish-list"
+                            data-label-remove="Retirer de la wish-list"
+                        >
+                            {% if offer.offer_id in wishlistOfferIds %}
+                                Retirer de la wish-list
+                            {% else %}
+                                Ajouter à la wish-list
+                            {% endif %}
+                        </button>
+                    {% endif %}
                 </div>
             </article>
         {% else %}
@@ -86,4 +102,9 @@
         extraQuery: 'keyword=' ~ keyword|url_encode ~ '&skill_id=' ~ skillId|url_encode ~ '&duration=' ~ duration|url_encode
     } %}
 </section>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="/js/wishlist.js"></script>
 {% endblock %}

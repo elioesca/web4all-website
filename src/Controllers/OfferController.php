@@ -4,6 +4,8 @@ namespace App\Controllers;
 
 use App\Models\OfferModel;
 use App\Models\Paginator;
+use App\Models\ApplicationModel;
+use App\Models\WishlistModel;
 
 class OfferController extends Controller
 {
@@ -26,6 +28,13 @@ class OfferController extends Controller
             $paginator->getOffset()
         );
 
+        $wishlistOfferIds = [];
+
+        if (!empty($_SESSION['user']) && $_SESSION['user']['role'] === 'student') {
+            $wishlistModel = new WishlistModel();
+            $wishlistOfferIds = $wishlistModel->getWishlistOfferIdsForStudent((int) $_SESSION['user']['id']);
+        }
+
         $this->render('offer/index.html.twig', [
             'pageTitle' => 'Rechercher une offre de stage',
             'offers' => $offers,
@@ -33,32 +42,10 @@ class OfferController extends Controller
             'keyword' => $keyword,
             'skillId' => $skillId,
             'duration' => $duration,
+            'wishlistOfferIds' => $wishlistOfferIds,
             'currentPage' => $paginator->getCurrentPage(),
             'totalPages' => $paginator->getTotalPages(),
             'basePath' => '/offers'
-        ]);
-    }
-
-    public function show(): void
-    {
-        $offerId = (int) ($_GET['id'] ?? 0);
-
-        if ($offerId <= 0) {
-            $this->redirect('/offers');
-        }
-
-        $offerModel = new OfferModel();
-        $offer = $offerModel->findById($offerId);
-
-        if (!$offer) {
-            $this->redirect('/offers');
-        }
-
-        $skills = $offerModel->getOfferSkills($offerId);
-
-        $this->render('offer/show.html.twig', [
-            'offer' => $offer,
-            'skills' => $skills
         ]);
     }
 
@@ -106,7 +93,7 @@ class OfferController extends Controller
         $offerModel = new OfferModel();
 
         if ($title === '' || $description === '' || $content === '' || $duration <= 0 || $salary < 0
-    || $availablePlaces <= 0 || $companyId <= 0 || $offerTypeId <= 0 || empty($skillIds)) {
+            || $availablePlaces <= 0 || $companyId <= 0 || $offerTypeId <= 0 || empty($skillIds)) {
             $this->render('offer/form.html.twig', [
                 'pageTitle' => 'DEPOSER UNE OFFRE',
                 'formAction' => '/offers/create',
@@ -306,5 +293,47 @@ class OfferController extends Controller
         $offerModel->deactivateOffer($offerId);
 
         $this->redirect('/offers');
+    }
+
+    public function show(): void
+    {
+        $offerId = (int) ($_GET['id'] ?? 0);
+
+        if ($offerId <= 0) {
+            $this->redirect('/offers');
+        }
+
+        $offerModel = new OfferModel();
+        $offer = $offerModel->findById($offerId);
+
+        if (!$offer) {
+            $this->redirect('/offers');
+        }
+
+        $skills = $offerModel->getOfferSkills($offerId);
+
+        $hasAlreadyApplied = false;
+        $isInWishlist = false;
+
+        if (!empty($_SESSION['user']) && $_SESSION['user']['role'] === 'student') {
+            $applicationModel = new \App\Models\ApplicationModel();
+            $hasAlreadyApplied = $applicationModel->hasAlreadyApplied(
+                (int) $_SESSION['user']['id'],
+                $offerId
+            );
+
+            $wishlistModel = new WishlistModel();
+            $isInWishlist = $wishlistModel->isOfferInWishlist(
+                (int) $_SESSION['user']['id'],
+                $offerId
+            );
+        }
+
+        $this->render('offer/show.html.twig', [
+            'offer' => $offer,
+            'skills' => $skills,
+            'hasAlreadyApplied' => $hasAlreadyApplied,
+            'isInWishlist' => $isInWishlist
+        ]);
     }
 }
