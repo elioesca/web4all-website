@@ -336,4 +336,30 @@ class OfferController extends Controller
             'isInWishlist' => $isInWishlist
         ]);
     }
+
+    public function stats(): void
+    {
+        $offerModel = new OfferModel();
+
+        $totalOffers = $offerModel->getTotalActiveOffers();
+        $averageApplications = $offerModel->getAverageApplicationsPerOffer();
+        $distribution = $offerModel->getOfferDistributionByDuration();
+        $topWishlisted = $offerModel->getTopWishlistedOffers(5);
+
+        $maxDistribution = 0;
+        foreach ($distribution as $item) {
+            if ((int) $item['total'] > $maxDistribution) {
+                $maxDistribution = (int) $item['total'];
+            }
+        }
+
+        $this->render('offer/stats.html.twig', [
+            'pageTitle' => 'STATISTIQUES DES OFFRES',
+            'totalOffers' => $totalOffers,
+            'averageApplications' => $averageApplications,
+            'distribution' => $distribution,
+            'topWishlisted' => $topWishlisted,
+            'maxDistribution' => $maxDistribution
+        ]);
+    }
 }
