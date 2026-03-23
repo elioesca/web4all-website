@@ -5,15 +5,31 @@ namespace App\Models;
 use PDO;
 use Throwable;
 
+/**
+ * ApplicationModel
+ *
+ * Gestion des candidatures : vérification d'existence, sélection du statut par défaut
+ * et insertion de nouvelles candidatures.
+ */
 class ApplicationModel
 {
     private PDO $db;
 
+    /**
+     * Initialise la connexion à la base de données via singleton.
+     */
     public function __construct()
     {
         $this->db = Database::getConnection();
     }
 
+    /**
+     * Vérifie si un étudiant a déjà postulé pour une offre donnée.
+     *
+     * @param int $studentUserId
+     * @param int $offerId
+     * @return bool true si une candidature existe, false sinon
+     */
     public function hasAlreadyApplied(int $studentUserId, int $offerId): bool
     {
         $stmt = $this->db->prepare("
@@ -32,6 +48,11 @@ class ApplicationModel
         return (bool) $stmt->fetch();
     }
 
+    /**
+     * Récupère le statut d'application par défaut (le plus petit ID).
+     *
+     * @return int ID du statut par défaut
+     */
     public function getDefaultApplicationStatusId(): int
     {
         $stmt = $this->db->query("
@@ -44,6 +65,15 @@ class ApplicationModel
         return (int) ($result['first_status_id'] ?? 1);
     }
 
+    /**
+     * Crée une candidature pour une offre.
+     *
+     * @param int $studentUserId
+     * @param int $offerId
+     * @param string $cvPath Chemin du CV téléversé
+     * @param string $coverLetterPath Chemin de la lettre de motivation téléversée
+     * @return bool true si création réussie
+     */
     public function createApplication(
         int $studentUserId,
         int $offerId,

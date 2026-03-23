@@ -5,6 +5,15 @@ namespace App\Models;
 use PDO;
 use Throwable;
 
+/**
+ * WishlistModel
+ *
+ * Gère la table wishlist et ses opérations :
+ * - récupération d'IDs d'offres sauvegardées
+ * - vérification d'existence en wishlist
+ * - ajout/suppression/bascule
+ * - pagination des offres sauvegardées
+ */
 class WishlistModel
 {
     private PDO $db;
@@ -14,6 +23,12 @@ class WishlistModel
         $this->db = Database::getConnection();
     }
 
+    /**
+     * Récupère toutes les IDs des offres de la wishlist d'un étudiant.
+     *
+     * @param int $studentUserId ID de l'étudiant
+     * @return int[] Liste des ID d'offres
+     */
     public function getWishlistOfferIdsForStudent(int $studentUserId): array
     {
         $stmt = $this->db->prepare("
@@ -31,6 +46,13 @@ class WishlistModel
         return array_map(fn($row) => (int) $row['offer_id'], $rows);
     }
 
+    /**
+     * Vérifie si une offre est dans la wishlist d'un étudiant.
+     *
+     * @param int $studentUserId ID de l'étudiant
+     * @param int $offerId ID de l'offre
+     * @return bool true si l'offre est en wishlist, false sinon
+     */
     public function isOfferInWishlist(int $studentUserId, int $offerId): bool
     {
         $stmt = $this->db->prepare("
@@ -49,6 +71,13 @@ class WishlistModel
         return (bool) $stmt->fetch();
     }
 
+    /**
+     * Ajoute une offre à la wishlist d'un étudiant.
+     *
+     * @param int $studentUserId ID de l'étudiant
+     * @param int $offerId ID de l'offre
+     * @return bool true si l'ajout a réussi, false en cas d'erreur (doublon, clé étrangère invalide, etc.)
+     */
     public function addToWishlist(int $studentUserId, int $offerId): bool
     {
         try {
@@ -66,6 +95,13 @@ class WishlistModel
         }
     }
 
+    /**
+     * Supprime une offre de la wishlist d'un étudiant.
+     *
+     * @param int $studentUserId ID de l'étudiant
+     * @param int $offerId ID de l'offre
+     * @return bool true si la suppression a réussi
+     */
     public function removeFromWishlist(int $studentUserId, int $offerId): bool
     {
         $stmt = $this->db->prepare("
@@ -80,6 +116,14 @@ class WishlistModel
         ]);
     }
 
+    /**
+     * Bascule l'état de wishlist pour une offre afin de gérer l'interface d'ajout/suppression.
+     * Si l'offre est déjà dans la wishlist, elle est retirée, sinon elle est ajoutée.
+     *
+     * @param int $studentUserId ID de l'étudiant
+     * @param int $offerId ID de l'offre
+     * @return array ['success' => bool, 'inWishlist' => bool]
+     */
     public function toggleWishlist(int $studentUserId, int $offerId): array
     {
         if ($this->isOfferInWishlist($studentUserId, $offerId)) {
@@ -99,13 +143,19 @@ class WishlistModel
         ];
     }
 
+    /**
+     * Récupère le nombre total d'offres en wishlist pour un étudiant.
+     *
+     * @param int $studentUserId ID de l'étudiant
+     * @return int nombre d'offres dans la wishlist
+     */
     public function countWishlistForStudent(int $studentUserId): int
     {
         $stmt = $this->db->prepare("
             SELECT COUNT(*) AS total
             FROM wishlist
             WHERE student_user_id = :student_user_id
-        ");
+        " );
 
         $stmt->execute([
             'student_user_id' => $studentUserId

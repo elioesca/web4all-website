@@ -5,15 +5,32 @@ namespace App\Models;
 use PDO;
 use Throwable;
 
+/**
+ * StudentModel
+ *
+ * Gère les étudiants avec les opérations de lecture, création, mise à jour,
+ * activation/désactivation et accès pilot.
+ */
 class StudentModel
 {
     private PDO $db;
 
+    /**
+     * Constructeur : obtient et stocke la connexion PDO.
+     */
     public function __construct()
     {
         $this->db = Database::getConnection();
     }
 
+    /**
+     * Récupère la liste des étudiants avec filtres de recherche et pagination.
+     *
+     * @param string $search Terme de recherche sur noms, email, promotion ou statut
+     * @param int $limit Nombre maximum de résultats
+     * @param int $offset Décalage pour la pagination
+     * @return array Résultats des étudiants
+     */
     public function getStudents(string $search = '', int $limit = 10, int $offset = 0): array
     {
         $searchValue = '%' . $search . '%';
@@ -54,6 +71,12 @@ class StudentModel
         return $stmt->fetchAll();
     }
 
+    /**
+     * Compte le nombre total d'étudiants correspondant au filtre de recherche.
+     *
+     * @param string $search Terme de recherche (facultatif)
+     * @return int Nombre d'étudiants trouvés
+     */
     public function countStudents(string $search = ''): int
     {
         $searchValue = '%' . $search . '%';
@@ -83,6 +106,12 @@ class StudentModel
         return (int) ($result['total'] ?? 0);
     }
 
+    /**
+     * Récupère les informations détaillées d'un étudiant par user_id.
+     *
+     * @param int $userId ID user de l'étudiant
+     * @return array|false Données de l'étudiant ou false si non trouvé
+     */
     public function findStudentById(int $userId): array|false
     {
         $sql = "
@@ -109,6 +138,11 @@ class StudentModel
         return $stmt->fetch();
     }
 
+    /**
+     * Récupère toutes les promotions disponibles.
+     *
+     * @return array Liste des promotions avec ID et nom
+     */
     public function getPromotions(): array
     {
         $stmt = $this->db->query("
@@ -120,6 +154,11 @@ class StudentModel
         return $stmt->fetchAll();
     }
 
+    /**
+     * Liste des statuts de recherche d'emploi des étudiants.
+     *
+     * @return array Statuts de recherche triés par ID
+     */
     public function getSearchStatuses(): array
     {
         $stmt = $this->db->query("
@@ -131,6 +170,19 @@ class StudentModel
         return $stmt->fetchAll();
     }
 
+    /**
+     * Crée un nouvel utilisateur étudiant avec insertion dans user + student.
+     * Transactionnel : rollback en cas d'échec sur l'une des tables.
+     *
+     * @param string $lastName
+     * @param string $firstName
+     * @param string $email
+     * @param string|null $phoneNumber
+     * @param string $password Mot de passe clair (hashé en base)
+     * @param int $promotionId ID de la promotion
+     * @param int $searchStatusId ID du statut de recherche
+     * @return bool true si la création a réussi
+     */
     public function createStudent(
         string $lastName,
         string $firstName,
@@ -179,6 +231,21 @@ class StudentModel
         }
     }
 
+    /**
+     * Met à jour les données du profil étudiant dans les tables user et student.
+     *
+     * Si un mot de passe est fourni, il est haché et stocké.
+     *
+     * @param int $userId
+     * @param string $lastName
+     * @param string $firstName
+     * @param string $email
+     * @param string|null $phoneNumber
+     * @param string|null $password
+     * @param int $promotionId
+     * @param int $searchStatusId
+     * @return bool true si la mise à jour a réussi
+     */
     public function updateStudent(
         int $userId,
         string $lastName,
@@ -253,6 +320,12 @@ class StudentModel
         }
     }
 
+    /**
+     * Désactive un compte étudiant en marquant is_valid à 0.
+     *
+     * @param int $userId
+     * @return bool true si la désactivation a réussi
+     */
     public function deactivateStudent(int $userId): bool
     {
         $stmt = $this->db->prepare("
@@ -266,6 +339,12 @@ class StudentModel
         ]);
     }
 
+    /**
+     * Récupère les IDs des étudiants relevant d'un pilote (par promotion).
+     *
+     * @param int $pilotUserId ID du pilote
+     * @return array IDs d'étudiants
+     */
     public function getPilotStudentIds(int $pilotUserId): array
     {
         $sql = "
@@ -285,6 +364,13 @@ class StudentModel
         return array_map(fn($row) => (int) $row['user_id'], $rows);
     }
 
+    /**
+     * Vérifie que le pilote peut accéder au profil d'un étudiant.
+     *
+     * @param int $pilotUserId ID du pilote
+     * @param int $studentUserId ID de l'étudiant
+     * @return bool true si le pilote supervise la promotion de l'étudiant
+     */
     public function pilotCanAccessStudent(int $pilotUserId, int $studentUserId): bool
     {
         $sql = "
@@ -305,6 +391,15 @@ class StudentModel
         return (bool) $stmt->fetch();
     }
 
+    /**
+     * Récupère les candidatures d'un étudiant pour un pilote spécifique.
+     *
+     * @param int $pilotUserId ID du pilote
+     * @param int $studentUserId ID de l'étudiant
+     * @param int $limit Nombre maximum de résultats
+     * @param int $offset Décalage pour la pagination
+     * @return array Liste des candidatures avec statut et documents
+     */
     public function getApplicationsForPilotStudent(
         int $pilotUserId,
         int $studentUserId,
@@ -339,6 +434,13 @@ class StudentModel
         return $stmt->fetchAll();
     }
 
+    /**
+     * Compte le nombre de candidatures d'un étudiant pour un pilote.
+     *
+     * @param int $pilotUserId
+     * @param int $studentUserId
+     * @return int Nombre de candidatures
+     */
     public function countApplicationsForPilotStudent(int $pilotUserId, int $studentUserId): int
     {
         $sql = "
@@ -348,7 +450,7 @@ class StudentModel
             INNER JOIN pilot_promotion pp ON pp.promotion_id = s.promotion_id
             WHERE a.student_user_id = :student_user_id
             AND pp.pilot_user_id = :pilot_user_id
-        ";
+        ";}{
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
@@ -361,6 +463,12 @@ class StudentModel
         return (int) ($result['total'] ?? 0);
     }
 
+    /**
+     * Réactive un compte étudiant en positionnant is_valid à 1.
+     *
+     * @param int $userId
+     * @return bool true si la réactivation a réussi
+     */
     public function reactivateStudent(int $userId): bool
     {
         $stmt = $this->db->prepare("
@@ -374,6 +482,12 @@ class StudentModel
         ]);
     }
 
+    /**
+     * Compte le nombre de candidatures déposées par un étudiant.
+     *
+     * @param int $studentUserId
+     * @return int Nombre de candidatures
+     */
     public function countApplicationsForStudent(int $studentUserId): int
     {
         $sql = "
@@ -392,6 +506,14 @@ class StudentModel
         return (int) ($result['total'] ?? 0);
     }
 
+    /**
+     * Récupère la liste des candidatures d'un étudiant avec pagination.
+     *
+     * @param int $studentUserId
+     * @param int $limit
+     * @param int $offset
+     * @return array Candidatures détaillées
+     */
     public function getApplicationsForStudent(
         int $studentUserId,
         int $limit = 10,

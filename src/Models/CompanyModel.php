@@ -5,15 +5,33 @@ namespace App\Models;
 use PDO;
 use Throwable;
 
+/**
+ * CompanyModel
+ *
+ * Gère les sociétés, leurs offres, avis et statistiques.
+ */
 class CompanyModel
 {
     private PDO $db;
 
+    /**
+     * Initialise la connexion PDO.
+     */
     public function __construct()
     {
         $this->db = Database::getConnection();
     }
 
+    /**
+     * Récupère la liste des sociétés actives avec filtres et pagination.
+     *
+     * @param string $name Filtre par nom ou accès partiel
+     * @param string $sector Filtre par secteur d'activité
+     * @param string $rating Filtre par note minimale
+     * @param int $limit Nombre d'enregistrements à ramener
+     * @param int $offset Déplacement pour la pagination
+     * @return array Companies
+     */
     public function getCompanies(
         string $name = '',
         string $sector = '',
@@ -71,6 +89,14 @@ class CompanyModel
         return $stmt->fetchAll();
     }
 
+    /**
+     * Compte le nombre de sociétés correspondantes aux filtres fournis.
+     *
+     * @param string $name
+     * @param string $sector
+     * @param string $rating
+     * @return int
+     */
     public function countCompanies(string $name = '', string $sector = '', string $rating = ''): int
     {
         $sql = "
@@ -116,6 +142,11 @@ class CompanyModel
         return (int) ($result['total'] ?? 0);
     }
 
+    /**
+     * Récupère les secteurs d'activité uniques existants.
+     *
+     * @return array Liste de secteurs
+     */
     public function getSectors(): array
     {
         $stmt = $this->db->query("
@@ -128,6 +159,12 @@ class CompanyModel
         return $stmt->fetchAll();
     }
 
+    /**
+     * Récupère les détails d'une société (notes et nombre de candidatures inclus).
+     *
+     * @param int $companyId
+     * @return array|false
+     */
     public function findById(int $companyId): array|false
     {
         $sql = "
@@ -158,6 +195,12 @@ class CompanyModel
         return $stmt->fetch();
     }
 
+    /**
+     * Récupère les offres publiées par une société.
+     *
+     * @param int $companyId
+     * @return array
+     */
     public function getCompanyOffers(int $companyId): array
     {
         $stmt = $this->db->prepare("
@@ -174,6 +217,12 @@ class CompanyModel
         return $stmt->fetchAll();
     }
 
+    /**
+     * Récupère les avis associés à une société.
+     *
+     * @param int $companyId
+     * @return array
+     */
     public function getCompanyReviews(int $companyId): array
     {
         $stmt = $this->db->prepare("
@@ -196,6 +245,13 @@ class CompanyModel
         return $stmt->fetchAll();
     }
 
+    /**
+     * Récupère l'avis d'un utilisateur pour une entreprise donnée.
+     *
+     * @param int $companyId
+     * @param int $userId
+     * @return array|false
+     */
     public function getUserReviewForCompany(int $companyId, int $userId): array|false
     {
         $stmt = $this->db->prepare("
@@ -213,6 +269,16 @@ class CompanyModel
         return $stmt->fetch();
     }
 
+    /**
+     * Ajoute une nouvelle entreprise.
+     *
+     * @param string $name
+     * @param string $description
+     * @param string $sector
+     * @param string $email
+     * @param string $phoneNumber
+     * @return bool
+     */
     public function createCompany(
         string $name,
         string $description,
@@ -234,6 +300,17 @@ class CompanyModel
         ]);
     }
 
+    /**
+     * Met à jour les informations d'une entreprise.
+     *
+     * @param int $companyId
+     * @param string $name
+     * @param string $description
+     * @param string $sector
+     * @param string $email
+     * @param string $phoneNumber
+     * @return bool
+     */
     public function updateCompany(
         int $companyId,
         string $name,
@@ -262,6 +339,12 @@ class CompanyModel
         ]);
     }
 
+    /**
+     * Désactive une entreprise (soft delete).
+     *
+     * @param int $companyId
+     * @return bool
+     */
     public function deactivateCompany(int $companyId): bool
     {
         $stmt = $this->db->prepare("
@@ -275,6 +358,15 @@ class CompanyModel
         ]);
     }
 
+    /**
+     * Ajoute ou met à jour un avis d'utilisateur pour une entreprise.
+     *
+     * @param int $companyId
+     * @param int $userId
+     * @param int $rating
+     * @param string $review
+     * @return bool
+     */
     public function saveReview(int $companyId, int $userId, int $rating, string $review): bool
     {
         try {

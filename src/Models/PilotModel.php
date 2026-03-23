@@ -5,15 +5,32 @@ namespace App\Models;
 use PDO;
 use Throwable;
 
+/**
+ * PilotModel
+ *
+ * Gère la logique des pilotes : lecture, création, mise à jour, activation/
+ * désactivation et gestion des promotions associées.
+ */
 class PilotModel
 {
     private PDO $db;
 
+    /**
+     * Constructeur : initialise la connexion à la base de données.
+     */
     public function __construct()
     {
         $this->db = Database::getConnection();
     }
 
+    /**
+     * Récupère la liste des pilotes filtrés par texte avec pagination.
+     *
+     * @param string $search Terme de recherche (nom, prénom, email)
+     * @param int $limit Nombre max de résultats
+     * @param int $offset Décalage pour la pagination
+     * @return array Résultats des pilotes
+     */
     public function getPilots(string $search = '', int $limit = 10, int $offset = 0): array
     {
         $searchValue = '%' . $search . '%';
@@ -46,6 +63,12 @@ class PilotModel
         return $stmt->fetchAll();
     }
 
+    /**
+     * Compte le nombre de pilotes correspondant au filtre de recherche.
+     *
+     * @param string $search Terme de recherche (facultatif)
+     * @return int Nombre total de pilotes
+     */
     public function countPilots(string $search = ''): int
     {
         $searchValue = '%' . $search . '%';
@@ -71,6 +94,12 @@ class PilotModel
         return (int) ($result['total'] ?? 0);
     }
 
+    /**
+     * Récupère un pilote par son user_id.
+     *
+     * @param int $userId
+     * @return array|false Détails du pilote ou false si introuvable
+     */
     public function findPilotById(int $userId): array|false
     {
         $sql = "
@@ -95,8 +124,20 @@ class PilotModel
         return $stmt->fetch();
     }
 
- public function createPilot(
-    string $lastName,
+    /**
+     * Crée un nouveau pilote (user + pilot + affectations promotions).
+     * Transactionnel : rollback si une étape échoue.
+     *
+     * @param string $lastName
+     * @param string $firstName
+     * @param string $email
+     * @param string|null $phoneNumber
+     * @param string $password
+     * @param array $promotionIds Liste d'IDs de promotions attribuées
+     * @return bool true si la création a réussi
+     */
+    public function createPilot(
+        string $lastName,
         string $firstName,
         string $email,
         ?string $phoneNumber,
@@ -152,6 +193,18 @@ class PilotModel
         }
     }
 
+    /**
+     * Met à jour un pilote et ses informations promotionnelles.
+     *
+     * @param int $userId
+     * @param string $lastName
+     * @param string $firstName
+     * @param string $email
+     * @param string|null $phoneNumber
+     * @param string|null $password Nouveau mot de passe (nullable)
+     * @param array $promotionIds Liste d'IDs de promotions (remplace l'existant)
+     * @return bool true si la mise à jour a réussi
+     */
     public function updatePilot(
         int $userId,
         string $lastName,
@@ -233,6 +286,12 @@ class PilotModel
         }
     }
 
+    /**
+     * Désactive le compte d'un pilote.
+     *
+     * @param int $userId
+     * @return bool true si la désactivation a réussi
+     */
     public function deactivatePilot(int $userId): bool
     {
         $stmt = $this->db->prepare("
@@ -246,6 +305,11 @@ class PilotModel
         ]);
     }
 
+    /**
+     * Récupère toutes les promotions disponibles (pour listes déroulantes).
+     *
+     * @return array liste des promotions
+     */
     public function getPromotions(): array
     {
         $stmt = $this->db->query("
@@ -257,6 +321,12 @@ class PilotModel
         return $stmt->fetchAll();
     }
 
+    /**
+     * Récupère les IDs des promotions assignées à un pilote.
+     *
+     * @param int $userId ID du pilote
+     * @return array IDs de promotions
+     */
     public function getPilotPromotionIds(int $userId): array
     {
         $stmt = $this->db->prepare("
@@ -274,6 +344,12 @@ class PilotModel
         return array_map(fn($row) => (int) $row['promotion_id'], $rows);
     }
 
+    /**
+     * Réactive le compte d'un pilote.
+     *
+     * @param int $userId
+     * @return bool true si la réactivation a réussi
+     */
     public function reactivatePilot(int $userId): bool
     {
         $stmt = $this->db->prepare("

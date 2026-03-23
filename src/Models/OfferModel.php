@@ -5,15 +5,34 @@ namespace App\Models;
 use PDO;
 use Throwable;
 
+/**
+ * OfferModel
+ *
+ * Gère les offres : recherche, filtres, statistiques, création/mise à jour,
+ * activation/désactivation et suivi des compétences.
+ */
 class OfferModel
 {
     private PDO $db;
 
+    /**
+     * Initialise la connexion à la base de données.
+     */
     public function __construct()
     {
         $this->db = Database::getConnection();
     }
 
+    /**
+     * Récupère une liste d'offres publiques avec filtres et pagination.
+     *
+     * @param string $keyword Recherche texte sur titre, description et nom de la société
+     * @param string $skillId Filtre optionnel sur compétence
+     * @param string $duration Filtre optionnel sur durée
+     * @param int $limit Nombre maximum d'offres retournées
+     * @param int $offset Décalage pour la pagination
+     * @return array Offres trouvées
+     */
     public function getOffers(
         string $keyword = '',
         string $skillId = '',
@@ -73,6 +92,14 @@ class OfferModel
         return $stmt->fetchAll();
     }
 
+    /**
+     * Compte le nombre d'offres publiques correspondant à des filtres.
+     *
+     * @param string $keyword
+     * @param string $skillId
+     * @param string $duration
+     * @return int Nombre total d'offres
+     */
     public function countOffers(string $keyword = '', string $skillId = '', string $duration = ''): int
     {
         $sql = "
@@ -115,6 +142,11 @@ class OfferModel
         return (int) ($result['total'] ?? 0);
     }
 
+    /**
+     * Liste toutes les compétences disponibles.
+     *
+     * @return array Skills triées par nom
+     */
     public function getSkills(): array
     {
         $stmt = $this->db->query("
@@ -126,6 +158,11 @@ class OfferModel
         return $stmt->fetchAll();
     }
 
+    /**
+     * Récupère les sociétés actives.
+     *
+     * @return array Companies valides triées par nom
+     */
     public function getCompanies(): array
     {
         $stmt = $this->db->query("
@@ -138,6 +175,11 @@ class OfferModel
         return $stmt->fetchAll();
     }
 
+    /**
+     * Récupère les types d'offres existants.
+     *
+     * @return array Types d'offres triés par nom
+     */
     public function getOfferTypes(): array
     {
         $stmt = $this->db->query("
@@ -149,6 +191,12 @@ class OfferModel
         return $stmt->fetchAll();
     }
 
+    /**
+     * Récupère les détails d'une offre par ID, incluant le nombre de candidatures.
+     *
+     * @param int $offerId
+     * @return array|false Offre ou false si inexistante
+     */
     public function findById(int $offerId): array|false
     {
         $sql = "
@@ -182,6 +230,12 @@ class OfferModel
         return $stmt->fetch();
     }
 
+    /**
+     * Récupère les IDs de compétences associées à une offre.
+     *
+     * @param int $offerId
+     * @return int[] Liste d'IDs skills
+     */
     public function getOfferSkillIds(int $offerId): array
     {
         $stmt = $this->db->prepare("
@@ -199,6 +253,12 @@ class OfferModel
         return array_map(fn($row) => (int) $row['skill_id'], $rows);
     }
 
+    /**
+     * Récupère les compétences détaillées d'une offre.
+     *
+     * @param int $offerId
+     * @return array Skills de l'offre
+     */
     public function getOfferSkills(int $offerId): array
     {
         $stmt = $this->db->prepare("
@@ -216,6 +276,22 @@ class OfferModel
         return $stmt->fetchAll();
     }
 
+    /**
+     * Crée une nouvelle offre et ses relations de compétences.
+     * Utilise une transaction pour cohérence.
+     *
+     * @param string $title
+     * @param string $description
+     * @param string $content
+     * @param int $duration
+     * @param float $salary
+     * @param int $availablePlaces
+     * @param int $companyId
+     * @param int $offerTypeId
+     * @param int $userId ID du créateur
+     * @param array $skillIds IDs des compétences liées
+     * @return bool
+     */
     public function createOffer(
         string $title,
         string $description,
@@ -276,6 +352,22 @@ class OfferModel
         }
     }
 
+    /**
+     * Met à jour une offre et réécrit ses compétences associées.
+     * Transactionnel pour rollback en cas d'erreur.
+     *
+     * @param int $offerId
+     * @param string $title
+     * @param string $description
+     * @param string $content
+     * @param int $duration
+     * @param float $salary
+     * @param int $availablePlaces
+     * @param int $companyId
+     * @param int $offerTypeId
+     * @param array $skillIds
+     * @return bool
+     */
     public function updateOffer(
         int $offerId,
         string $title,
@@ -344,6 +436,12 @@ class OfferModel
         }
     }
 
+    /**
+     * Désactive une offre sans la supprimer physiquement.
+     *
+     * @param int $offerId
+     * @return bool
+     */
     public function deactivateOffer(int $offerId): bool
     {
         $stmt = $this->db->prepare("
@@ -357,6 +455,11 @@ class OfferModel
         ]);
     }
 
+    /**
+     * Retourne le nombre total d'offres actives.
+     *
+     * @return int
+     */
     public function getTotalActiveOffers(): int
     {
         $stmt = $this->db->query("
@@ -370,6 +473,11 @@ class OfferModel
         return (int) ($result['total'] ?? 0);
     }
 
+    /**
+     * Calcule le nombre moyen de candidatures par offre active.
+     *
+     * @return float
+     */
     public function getAverageApplicationsPerOffer(): float
     {
         $stmt = $this->db->query("
@@ -388,6 +496,11 @@ class OfferModel
         return (float) ($result['average_applications'] ?? 0);
     }
 
+    /**
+     * Retourne la distribution des offres actives par durée.
+     *
+     * @return array Durée => nombre d'offres
+     */
     public function getOfferDistributionByDuration(): array
     {
         $stmt = $this->db->query("
@@ -401,6 +514,12 @@ class OfferModel
         return $stmt->fetchAll();
     }
 
+    /**
+     * Récupère les offres les plus ajoutées en wishlist.
+     *
+     * @param int $limit Nombre d'offres à retourner (défaut 5)
+     * @return array
+     */
     public function getTopWishlistedOffers(int $limit = 5): array
     {
         $stmt = $this->db->prepare("
