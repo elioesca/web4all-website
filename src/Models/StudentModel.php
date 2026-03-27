@@ -450,7 +450,7 @@ class StudentModel
             INNER JOIN pilot_promotion pp ON pp.promotion_id = s.promotion_id
             WHERE a.student_user_id = :student_user_id
             AND pp.pilot_user_id = :pilot_user_id
-        ";}{
+        ";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
